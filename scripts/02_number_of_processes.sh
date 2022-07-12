@@ -1,11 +1,16 @@
 #!/bin/bash
 
 # Define a limit for connections
-max_allowed_processes=10 ## default 10
+min_non_offending_processes=5        # to exclude user with less than these processesç
+#max_allowed_processes=10 ## default 5
+
+#get time
+timestamp=$(date +"%A %d-%m-%Y %R")
 
 # find users connected
 ps -aux	\
 | grep -v "root" \
+| grep -v "condor" \
 | tr -s " " \
 | cut -d " " -f1 \
 | sort \
@@ -13,9 +18,11 @@ ps -aux	\
 | tr -s " " \
 | sed -s "s# ##" \
 | sort -nr \
-| awk -v limit=$max_allowed_processes \
+| awk \
+	-v low_limit="$min_non_offending_processes" \
+	-v stamp="$timestamp" \
 	'
 	BEGIN{ FS=OFS=" " }
-	$1 > limit { print $0 }
+	$1 > low_limit { print stamp, $0 }
 	' \
-> offending_number_of_processes.txt
+| tr " " "\t"
