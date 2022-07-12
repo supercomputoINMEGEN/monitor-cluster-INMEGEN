@@ -20,7 +20,7 @@ do
 	## run test
 	PRUEBA=$(ping -i 1 -c 1 $la_ip > /dev/null \
 	&& echo "En_Linea" \
-	|| echo "FALLA - NO_da_ping" )
+	|| echo "FALLA_NO_da_ping" )
 	### Send message
 	echo "$timestamp" "$el_hostname $la_ip" "$PRUEBA" | tr " " "\t"
 done < <( grep -v "#" $conexionfile )
