@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# get year
-timestamp=$(date +"%A %d-%m-%Y %R")
+# set time
+timestamp=$1
 
 condor_q -all \
 | grep "ID:" \

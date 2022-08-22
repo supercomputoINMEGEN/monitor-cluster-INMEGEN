@@ -3,9 +3,6 @@
 # read server + ip file from args
 conexionfile=$1
 
-# get time
-timestamp=$(date +"%A %d-%m-%Y %R")
-
 # echo " [DEBUG] Se ejecuta la prueba ping -i 5 -c 1 la_ip para las siguientes ips"
 # echo " [DEBUG] cada ping esperará aprox. 15 segundos la respuesta de la_ip"
 # echo " [DEBUG] Se hace la prueba desde la red: $la_red"

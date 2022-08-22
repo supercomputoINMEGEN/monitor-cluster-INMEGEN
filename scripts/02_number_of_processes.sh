@@ -4,8 +4,11 @@
 min_non_offending_processes=5        # to exclude user with less than these processesç
 #max_allowed_processes=10 ## default 5
 
-#get time
-timestamp=$(date +"%A %d-%m-%Y %R")
+# hostname
+elhost=$(hostname)
+
+# set time
+timestamp=$1
 
 # find users connected
 ps -aux	\
@@ -21,8 +24,9 @@ ps -aux	\
 | awk \
 	-v low_limit="$min_non_offending_processes" \
 	-v stamp="$timestamp" \
+	-v host="$elhost" \
 	'
 	BEGIN{ FS=OFS=" " }
-	$1 > low_limit { print stamp, $0 }
+	$1 > low_limit { print stamp, $0, host }
 	' \
 | tr " " "\t"
