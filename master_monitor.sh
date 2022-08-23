@@ -2,6 +2,10 @@
 
 # INSTRUCCIONES:
 
+# Pre-0. Instala R (puedes seguir este tuto https://linuxize.com/post/how-to-install-r-on-ubuntu-20-04/)
+#	e instala los siguientes paquetes:
+# vroom, dplyr, ggplot2, stringr, lubridate
+
 # 0. Asegurate de configurar la conexion por llave ssh entre el monitor donde esta instalado este scripts
 #     y los hosts en conexioninfo/serverlist.tsv
 #     Puedes seguir este tutorial: https://linuxhint.com/generate-ssh-key-ubuntu/
@@ -15,8 +19,11 @@
 # ./master_monitor.sh
 # scripts/01_pinger_local.sh
 # scripts/02_number_of_processes.sh
+# scripts/...
 
-# 2. definir el comando para
+# 2. Prueba el monitor ejecuando el script tester con:
+#	bash teste.sh
+# (si hay alguna carpeta con logs previos en ./logs, te va a prueguntar si lo quieres borrar)
 
 # 3. luego agregue este script en el crontab. Puede seguir este tutorial: https://linuxhint.com/schedule_crontab_job_every_hour/
 # Ejemplo de linea para el crontab

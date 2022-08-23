@@ -4,25 +4,27 @@ library("pacman")
 p_load( "vroom",
         "dplyr",
         "ggplot2",
+        "tidyr",
         "lubridate" )
 
 #read args from command line
 args <- commandArgs( trailingOnly = TRUE )
 
 # pass args to objects
-ifile <- args[1]
+ifile <- args[1] # "nodos_online.log.gz" 
 ofile <- args[2]
 
 # read data
 nodos <- read.table( file = ifile,
                      sep = "\t",
                      header = FALSE ) %>% 
-  rename( dia = 1,
-          fecha = 2,
-          hora = 3,
-          nodo = 4,
-          ip = 5,
-          estado = 6 ) %>% 
+  rename( timestamp = 1,
+          nodo = 2,
+          ip = 3,
+          estado = 4 ) %>% 
+  separate( col =  timestamp,
+            into = c( "dia", "fecha", "hora" ),
+            sep = "_" ) %>% 
   mutate( fecha2 = dmy(fecha),
           hora2 = hm(hora) ) %>% 
   group_by( nodo ) %>% 
@@ -32,21 +34,28 @@ nodos <- read.table( file = ifile,
 
 # plot
 panel_nodo <- ggplot( data = nodos,
-                      mapping = aes( x = 1,
-                                     y = nodo,
-                                     fill = estado,
-                                     label = estado ) ) + 
-  geom_tile( color = "black",
-             size = 1 ) +
-  geom_text( color = "white" ) +
+        mapping = aes( y = nodo ) ) + 
+  geom_point( mapping = aes( x = 1,
+                             fill = estado,
+                             shape = estado ),
+              color = "black",
+              size = 6 ) +
+  geom_text( mapping = aes( x = 1.5,
+                            label = estado ),
+             size = 6,
+             hjust = 0,
+             color = "black" ) +
   scale_fill_manual( values = c("En_Linea" = "limegreen",
                                 "FALLA_NO_da_ping" = "tomato") ) +
+  scale_shape_manual( values = c("En_Linea" = 24,
+                                "FALLA_NO_da_ping" = 25 ) ) +
   labs( title = "Estado de los nodos de computo",
         subtitle = paste("Ultima revision",
                          unique( nodos$dia),
                          unique( nodos$fecha ),
                          unique( nodos$hora ) ),
         caption = "Jefatura de Supercomputo - INMEGEN") +
+  scale_x_continuous( limits = c( 0.5, 4 ) ) +
   theme_void( ) +
   theme( axis.text.y = element_text( face = "bold",
                                      hjust = 1,
