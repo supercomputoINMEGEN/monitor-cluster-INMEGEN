@@ -75,7 +75,7 @@ ui <- dashboardPage( skin = "purple",
 server <- function(input, output) {
   
   output$nodos_online <- renderPlot(
-    readRDS( file = "imagen_nodos_online.rds" )
+    readRDS( file = "logs/imagen_nodos_online.rds" )
   )
 }
 
