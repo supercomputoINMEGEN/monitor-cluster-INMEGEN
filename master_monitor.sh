@@ -27,8 +27,8 @@
 
 # 3. luego agregue este script en el crontab. Puede seguir este tutorial: https://linuxhint.com/schedule_crontab_job_every_hour/
 # Ejemplo de linea para el crontab
-# sudo crontab -e
-# 0 * * * * /home/itadmin/Ongoin_projects/monitor-cluter-INMEGEN/master_monitor.sh
+# crontab -e
+# */15 * * * * /home/itadmin/monitor-cluster-INMEGEN/master_monitor.sh
 
 # automatically get the dir from this master script; answer taken from: https://stackoverflow.com/questions/3349105/how-can-i-set-the-current-working-directory-to-the-directory-of-the-script-in-ba
 monitor_path="$(dirname ${BASH_SOURCE[0]})"
@@ -65,3 +65,8 @@ bash "$monitor_path/scripts/ssh-executer.sh" \
   "$monitor_path/conexioninfo/serverlist.tsv" \
   "$monitor_path/scripts/04_user_connections_logs.sh" \
 | gzip -9 > "$logdir_path/conexiones_activas.log.gz"
+
+#
+Rscript "$monitor_path/scripts/05_nodos_online.R" \
+  "$monitor_path/logs/nodos_online.log.gz" \
+  "$monitor_path/logs/imagen_nodos_online.rds"
