@@ -70,3 +70,6 @@ bash "$monitor_path/scripts/ssh-executer.sh" \
 Rscript "$monitor_path/scripts/05_nodos_online.R" \
   "$monitor_path/logs/nodos_online.log.gz" \
   "$monitor_path/logs/imagen_nodos_online.rds"
+
+# re-touch the restart token to update the shiny app
+touch "$monitor_path/restart.txt" 
