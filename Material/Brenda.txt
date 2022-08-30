@@ -1,0 +1,77 @@
+#Librerias a ocupar
+library(shiny)
+library(shinydashboard)
+library(readr)
+library(tidyr)
+library(DT)
+
+#Tabla de datos con la que vamos a trabajar
+Cambio <- read_csv("Divisas_pandemia.csv")
+
+#
+#Inicio de la programación
+#Creamos una pagina
+ui<-dashboardPage(title= "Ejemplo", skin= "blue",
+                  dashboardHeader(title="PROYECTO",
+                                  dropdownMenu(type = "messages",
+                                               messageItem(from = "Diego",
+                                                           "Bienvenido"))
+                  ),
+                  #Creamos el menú a un costado
+                  dashboardSidebar(
+                    sidebarSearchForm("searchText","buttonSearch","Buscar"),
+                    sidebarMenu(id="sidebarID",
+                                #Listado de elementos dentro del menu
+                                menuItem("Portada"), # Texto
+                                menuItem("Usuarios", tabName = "datos", icon = icon("user")),# Tabla
+                                menuItem("Nodos", tabName = "datos1"), # Tabla
+                                menuItem("Reglamento", tabName = "Regla",  icon = icon("book")),# Texto
+                                menuItem("Problemas", tabName = "datos2", icon = icon("hammer")), # Tabla
+                                menuItem("Contacto", icon = icon("address-book")), # Imagen
+                                menuItem("Agradecimientos", tabName = "imag") # Texto
+                    )
+                  ),
+                  #Contenido de los elemtos dentro del menu
+                  dashboardBody(
+                    
+                    
+                    tabItems(tabItem(tabName = "datos", 
+                                     DT::dataTableOutput("datos")
+                                     
+                                     
+                    ),
+                    ##Esta linea de codigo, debería generar una previstsa del PDF en pantalla, pero la abre en internet
+                    tabPanel("Reglamento",
+                                     tags$iframe(style="height:400px; width:100%; scrolling=yes",
+                                                 src="Copy.pdf"
+                      )
+                    ),
+
+                    
+                    tabItem(tabItem(tabName = "datos1",
+                                    DT::dataTableOutput("datos1"))
+                    ),
+                    
+                    tabItem(tabItem(tabName = "datos2",
+                                    DT::dataTableOutput("datos2"))
+                    ), 
+                    
+                    tabItem(tabName="imag", 
+                            box(title="Contacto", tags$image(type = "image/jpg",src = "agradecimientos.jpg",
+                                                            controls = "controls", height="400px", width="600px"), 
+                                width=12, status="primary", solidHeader=T))
+                    
+                    )
+                  ))
+server <- function(input, output) { 
+  output$datos <- DT::renderDataTable(Cambio)
+  output$datos1 <- DT::renderDataTable(Cambio)
+  output$datos2 <- DT::renderDataTable(Cambio)
+  output$imag <- renderImage({
+    return(list(src = "www/agradecimientos.jpg", contentType = "image/jpg"))
+  })
+  
+}
+
+
+shinyApp(ui, server)
