@@ -9,10 +9,10 @@ library(DT)
 #Como son las tablas, los archivos PFD y los textos
 Cambio <- read_csv("Divisas_pandemia.csv")# Esta es la tabla dirigida al apartado de usuarios
 #Aqui ocupamos la ruta del archivo .txt, para posteriormente entregar los parametros al objeto Bienvenida
-ruta<-"/home/descalera/Documentos/App-1/PryctIsra2/Brenda.txt"
+ruta<-"/home/descalera/Documentos/Monitor_Cluster/Brenda.txt"
 Bienvenida_txt <- read.table(ruta, header=T, sep = "\t")
 #De igual manera, para los problemas
-ruta1<-"/home/descalera/Documentos/App-1/PryctIsra2/Problemas.txt"
+ruta1<-"/home/descalera/Documentos/Monitor_Cluster/Problemas.txt"
 Problemas_txt <- read.table(ruta1, header=T, sep = "\t")
 #El material para la tabla de nodos
 Nodal <- read_csv("RiesgosPI2.csv")
