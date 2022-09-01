@@ -35,7 +35,7 @@ ui <- dashboardPage( skin = "purple",
                                   # Boxes need to be put in a row (or column)
                                   fluidRow(
                                     box( plotOutput( "nodos_online", height = 250 ) ),
-                                    box( title = "En construccion" )
+                                    box( plotOutput( "slots_disponibilidad", height = 250 ) )
                                   )
                          ), # Este cierra la pestania mainboard
                          tabItem( tabName = "rules",
@@ -74,6 +74,9 @@ server <- function(input, output) {
   
   output$nodos_online <- renderPlot(
     readRDS( file = "logs/imagen_nodos_online.rds" )
+  )
+  output$slots_disponibilidad <- renderPlot(
+    readRDS( file = "logs/imagen_disponibilidad.rds" )
   )
 }
 
