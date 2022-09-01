@@ -39,10 +39,8 @@ ui <- dashboardPage( skin = "purple",
                                   )
                          ), # Este cierra la pestania mainboard
                          tabItem( tabName = "rules",
-                                  # Boxes need to be put in a row (or column)
-                                  fluidRow(
-                                    box( title = "En construccion" )
-                                  )
+                                  tags$iframe( style = "height:800px; width:100%; scrolling = yes",
+                                               src = "reglamentoclusterinmegen.pdf" )
                          ),
                          tabItem( tabName = "installed",
                                   # Boxes need to be put in a row (or column)

@@ -66,10 +66,16 @@ bash "$monitor_path/scripts/ssh-executer.sh" \
   "$monitor_path/scripts/04_user_connections_logs.sh" \
 | gzip -9 > "$logdir_path/conexiones_activas.log.gz"
 
-#
+# Se ejecuta el visualizador de nodos en R
 Rscript "$monitor_path/scripts/05_nodos_online.R" \
   "$monitor_path/logs/nodos_online.log.gz" \
   "$monitor_path/logs/imagen_nodos_online.rds"
 
+# se ejectua el ejecutador de scripts por ssh, y el primer argumento es la lista de servidores a revisar, Y  el segundo argumento es el script que vas a mandar por ssh
+bash "$monitor_path/scripts/ssh-executer.sh" \
+  "$monitor_path/conexioninfo/serverlist.tsv" \
+  "$monitor_path/scripts/06_slot_availability.sh" \
+| gzip -9 >> "$logdir_path/disponibilidad_en_condor.log.gz"
+
 # re-touch the restart token to update the shiny app
-touch "$monitor_path/restart.txt" 
+touch "$monitor_path/restart.txt"
