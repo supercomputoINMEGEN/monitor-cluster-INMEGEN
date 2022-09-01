@@ -9,7 +9,7 @@ condor_status \
 | tr -s " " \
 | sed -s "s#^ ##" \
 | tail -n1 \
-| cut -f2,4,5 \
+| cut -d " " -f2,4,5 \
 | awk -v  time="$timestamp" ' BEGIN{ FS=OFS=" "}
 	{print time, $0} ' \
 | tr " " "\t"
