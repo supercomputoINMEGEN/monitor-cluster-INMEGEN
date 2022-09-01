@@ -77,5 +77,10 @@ bash "$monitor_path/scripts/ssh-executer.sh" \
   "$monitor_path/scripts/06_slot_availability.sh" \
 | gzip -9 >> "$logdir_path/disponibilidad_en_condor.log.gz"
 
+# Se ejecuta el visualizador de nodos en R
+Rscript "$monitor_path/scripts/07_disponibilidad_plot.R" \
+  "$monitor_path/logs/disponibilidad_en_condor.log.gz" \
+  "$monitor_path/logs/imagen_disponibilidad.rds"
+
 # re-touch the restart token to update the shiny app
 touch "$monitor_path/restart.txt"
