@@ -49,7 +49,8 @@ waffle <- waffle( waf_data, rows = 8,
                          unique( slots$dia),
                          unique( slots$fecha ),
                          unique( slots$hora ) ),
-        caption = "Jefatura de Supercomputo - INMEGEN" ) +
+#        caption = "Jefatura de Supercomputo - INMEGEN"
+) +
   theme_linedraw(  ) +
   theme( axis.text = element_blank( ),
          axis.ticks = element_blank( ),
@@ -89,7 +90,7 @@ barra <- ggplot( data = percentdata,
          plot.title = element_text( hjust = 0.5, size = 20) )
 
 # create a panel
-panel_disponible <- plot_grid( rel_heights = c( 0.9, 0.1 ) ,
+panel_disponible <- plot_grid( rel_heights = c( 0.85, 0.15 ) ,
                                waffle, barra, ncol = 1 )
 
 
