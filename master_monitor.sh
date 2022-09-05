@@ -82,5 +82,11 @@ Rscript "$monitor_path/scripts/07_disponibilidad_plot.R" \
   "$monitor_path/logs/disponibilidad_en_condor.log.gz" \
   "$monitor_path/logs/imagen_disponibilidad.rds"
 
+# se ejectua el ejecutador de scripts por ssh, y el primer argumento es la lista de servidores a revisar, Y  el segundo argumento es el script que va a recuperar el uso de recursos en general
+bash "$monitor_path/scripts/ssh-executer.sh" \
+  "$monitor_path/conexioninfo/serverlist.tsv" \
+  "$monitor_path/scripts/08_general_resources.sh" \
+| gzip -9 >> "$logdir_path/recursos_por_nodo.log.gz"
+
 # re-touch the restart token to update the shiny app
 touch "$monitor_path/restart.txt"
