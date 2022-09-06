@@ -33,12 +33,14 @@
 # automatically get the dir from this master script; answer taken from: https://stackoverflow.com/questions/3349105/how-can-i-set-the-current-working-directory-to-the-directory-of-the-script-in-ba
 monitor_path="$(dirname ${BASH_SOURCE[0]})"
 logdir_path="$monitor_path/logs"
+reports_path="$monitor_path/reports"
 
 # uncomment to test monitor path assign
 # echo $monitor_path
 
 # create el results dir
 mkdir -p "$logdir_path"
+mkdir -p "$reports_path"
 
 # mark timestamp
 export timestamp=$(date +"%A_%d-%m-%Y_%R")
@@ -93,10 +95,11 @@ Rscript "$monitor_path/scripts/09_resources_heatmap.R" \
   "$monitor_path/logs/recursos_por_nodo.log.gz" \
   "$monitor_path/logs/imagen_recursos_libres.rds"
 
-# Se ejecuta el render de Rmarkdown, el primer arg es la ruta al script.Rmd y el segundo arg es el dataset que lee ese rmd
+# Se ejecuta el render de Rmarkdown, el primer arg es la ruta al script.Rmd y el segundo arg es el dataset que lee ese rmd, el tercer arg es el destino del reporte.pdf
 Rscript "$monitor_path/scripts/00.runthemd.R" \
   "$monitor_path/scripts/10_R1_reporte_uso_inadecuado_nodos.Rmd" \
-  "$monitor_path/logs/procesos_por_usuario_online.log.gz"
+  "$monitor_path/logs/procesos_por_usuario_online.log.gz" \
+  "$monitor_path/reports/R1_reporte_uso_inadecuado_nodos.pdf"
 
 # re-touch the restart token to update the shiny app
 touch "$monitor_path/restart.txt"
