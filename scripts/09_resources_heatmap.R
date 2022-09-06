@@ -109,7 +109,7 @@ res_heatmap <- ggplot( data = fortiles,
              height = 0.7,
              width = 0.7 ) +
   geom_text( mapping = aes( label = floor( available ) ),
-             size = 5 ) +
+             size = 4 ) +
   scale_fill_gradient2( low = "limegreen",
                         mid = "yellow",
                         high = "tomato",
@@ -120,26 +120,26 @@ res_heatmap <- ggplot( data = fortiles,
   scale_x_discrete( position = "top", limits = c( "free_cpu",
                                                   "free_mem",
                                                   "free_disk" ),
-                    labels = c( "CPUs libres\n(threads)",
-                                "Memoria libre\nGB",
-                                "Espacio en disco libre (/)\nGB") ) +
-  labs( title = "Disponibilidad de Recursos por Nodo",
+                    labels = c( "CPUs\n(threads)",
+                                "RAM\nen GB",
+                                "Disco Duro (/)\nen GB") ) +
+  labs( title = "Recursos Libres por Nodo",
         fill = "% de recurso\nusado\n",
-        subtitle = paste("Ultima revision",
+        caption = paste("Ultima revision",
                          unique( nodos$dia),
                          unique( nodos$fecha ),
                          unique( nodos$hora ) ) ) +
-  theme_void( base_size = 20 ) +
+  theme_void( base_size = 15 ) +
   guides( fill = guide_colourbar( title.hjust = 0.5,
                                   frame.colour = "black",
                                   ticks.colour = "black" ) ) +
   theme( 
-    axis.text.x = element_text( ),
+    axis.text.x = element_text( size = 10 ),
     axis.text.y = element_text( face = "bold" ),
-    legend.text = element_text( size = 12 ),
-    legend.title = element_text( size = 15 ),
-    plot.subtitle = element_text( hjust = 0.5,
-                                  size = 15 ),
+    legend.text = element_text( size = 10 ),
+    legend.title = element_text( size = 12 ),
+    plot.caption = element_text( hjust = 1,
+                                  size = 8 ),
     plot.title = element_text( hjust = 0.5 )
   )
 

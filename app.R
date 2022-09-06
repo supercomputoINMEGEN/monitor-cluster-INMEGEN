@@ -38,7 +38,7 @@ ui <- dashboardPage( skin = "purple",
                                     box( plotOutput( "slots_disponibilidad", height = 250 ) )
                                   ),
                                   fluidRow(
-                                    box( plotOutput( "nodos_online", height = 250 ) )
+                                    box( plotOutput( "nodos_recursos", height = 250 ) )
                                   )
                          ), # Este cierra la pestania mainboard
                          tabItem( tabName = "rules",
@@ -80,6 +80,9 @@ server <- function(input, output) {
   )
   output$slots_disponibilidad <- renderPlot(
     readRDS( file = "logs/imagen_disponibilidad.rds" )
+  )
+  output$nodos_recursos <- renderPlot(
+    readRDS( file = "logs/imagen_recursos_libres.rds" )
   )
 }
 
