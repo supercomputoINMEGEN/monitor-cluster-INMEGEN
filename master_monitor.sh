@@ -88,5 +88,10 @@ bash "$monitor_path/scripts/ssh-executer.sh" \
   "$monitor_path/scripts/08_general_resources.sh" \
 | gzip -9 >> "$logdir_path/recursos_por_nodo.log.gz"
 
+# Se ejecuta el visualizador de recursos en R
+Rscript "$monitor_path/scripts/09_resources_heatmap.R" \
+  "$monitor_path/logs/recursos_por_nodo.log.gz" \
+  "$monitor_path/logs/imagen_recursos_libres.rds"
+
 # re-touch the restart token to update the shiny app
 touch "$monitor_path/restart.txt"
