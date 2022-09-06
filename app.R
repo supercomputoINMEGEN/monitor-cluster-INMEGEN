@@ -36,6 +36,9 @@ ui <- dashboardPage( skin = "purple",
                                   fluidRow(
                                     box( plotOutput( "nodos_online", height = 250 ) ),
                                     box( plotOutput( "slots_disponibilidad", height = 250 ) )
+                                  ),
+                                  fluidRow(
+                                    box( plotOutput( "nodos_online", height = 250 ) )
                                   )
                          ), # Este cierra la pestania mainboard
                          tabItem( tabName = "rules",
