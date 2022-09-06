@@ -101,60 +101,49 @@ disk <- recalc %>%
 # bind res dfs
 fortiles <- bind_rows( cpu, mem, disk )
 
-ggplot( data = fortiles,
-        mapping = aes( x = resource,
-                       y = nodo,
-                       fill = percent_used ) ) +
-  geom_tile( color = "black" ) +
+res_heatmap <- ggplot( data = fortiles,
+                       mapping = aes( x = resource,
+                                      y = nodo,
+                                      fill = percent_used ) ) +
+  geom_tile( color = "black", size = 0.7,
+             height = 0.7,
+             width = 0.7 ) +
   geom_text( mapping = aes( label = floor( available ) ),
              size = 5 ) +
-  scale_fill_gradient( low = "limegreen",
+  scale_fill_gradient2( low = "limegreen",
+                        mid = "yellow",
                         high = "tomato",
-                       limit = c(0 , 1),
-                       labels = percent ) +
-  scale_x_discrete( limits = c( "free_cpu",
-                                "free_mem",
-                                "free_disk" ),
-                    labels = c( "CPUs libres\nThreads",
+                        midpoint = 0.5, 
+                        limit = c(0 , 1),
+                        breaks = c(0, 0.5, 1),
+                        labels = percent ) +
+  scale_x_discrete( position = "top", limits = c( "free_cpu",
+                                                  "free_mem",
+                                                  "free_disk" ),
+                    labels = c( "CPUs libres\n(threads)",
                                 "Memoria libre\nGB",
-                                "Espacio en disco libre\nGB") ) +
-  theme_light( base_size = 20 ) +
-  theme( legend.position = "none",
-         axis.title.x = element_blank( ) )
+                                "Espacio en disco libre (/)\nGB") ) +
+  labs( title = "Disponibilidad de Recursos por Nodo",
+        fill = "% de recurso\nusado\n",
+        subtitle = paste("Ultima revision",
+                         unique( nodos$dia),
+                         unique( nodos$fecha ),
+                         unique( nodos$hora ) ) ) +
+  theme_void( base_size = 20 ) +
+  guides( fill = guide_colourbar( title.hjust = 0.5,
+                                  frame.colour = "black",
+                                  ticks.colour = "black" ) ) +
+  theme( 
+    axis.text.x = element_text( ),
+    axis.text.y = element_text( face = "bold" ),
+    legend.text = element_text( size = 12 ),
+    legend.title = element_text( size = 15 ),
+    plot.subtitle = element_text( hjust = 0.5,
+                                  size = 15 ),
+    plot.title = element_text( hjust = 0.5 )
+  )
 
-# # plot
-# panel_nodo <- ggplot( data = nodos,
-#                       mapping = aes( y = nodo ) ) + 
-#   geom_point( mapping = aes( x = 1,
-#                              fill = estado,
-#                              shape = estado ),
-#               color = "black",
-#               size = 6 ) +
-#   geom_text( mapping = aes( x = 1.5,
-#                             label = estado ),
-#              size = 6,
-#              hjust = 0,
-#              color = "black" ) +
-#   scale_fill_manual( values = c("En_Linea" = "limegreen",
-#                                 "FALLA_NO_da_ping" = "tomato") ) +
-#   scale_shape_manual( values = c("En_Linea" = 24,
-#                                  "FALLA_NO_da_ping" = 25 ) ) +
-#   labs( title = "Estado de los nodos de computo",
-#         subtitle = paste("Ultima revision",
-#                          unique( nodos$dia),
-#                          unique( nodos$fecha ),
-#                          unique( nodos$hora ) ),
-#         caption = "Jefatura de Supercomputo - INMEGEN") +
-#   scale_x_continuous( limits = c( 0.5, 4 ) ) +
-#   theme_void( ) +
-#   theme( axis.text.y = element_text( face = "bold",
-#                                      hjust = 1,
-#                                      size = 15 ),
-#          legend.position = "none",
-#          plot.title = element_text( hjust = 0.5 ),
-#          plot.subtitle = element_text( hjust = 0.5,
-#                                        size = 7 ) )
-# 
-# # save plot for easy loading
-# saveRDS( panel_nodo,
-#          file = ofile )
+
+# save plot for easy loading
+saveRDS( res_heatmap,
+         file = ofile )
