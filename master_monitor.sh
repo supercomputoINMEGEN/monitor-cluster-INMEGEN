@@ -99,8 +99,7 @@ Rscript "$monitor_path/scripts/09_resources_heatmap.R" \
 Rscript "$monitor_path/scripts/00.runthemd.R" \
   "$monitor_path/scripts/10_R1_reporte_uso_inadecuado_nodos.Rmd" \
   "$monitor_path/logs/procesos_por_usuario_online.log.gz" \
-  "$monitor_path/reports/R1_reporte_uso_inadecuado_nodos.Rmd"
-
+  "$monitor_path/reports/R1_reporte_uso_inadecuado_nodos.pdf"
 
 # re-touch the restart token to update the shiny app
 touch "$monitor_path/restart.txt"
