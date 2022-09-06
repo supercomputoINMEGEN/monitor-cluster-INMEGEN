@@ -11,6 +11,7 @@ args = commandArgs( trailingOnly = TRUE )
 ## Passing args to named objects
 rmd_file <- args[1]
 ifile <- args[2]
+output_pdf <- args[3]
 
 # call the renderizer
-rmarkdown::render( input = rmd_file ) 
+rmarkdown::render( input = rmd_file, output_file = output_pdf  ) 
