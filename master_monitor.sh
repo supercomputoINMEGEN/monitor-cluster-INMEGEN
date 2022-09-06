@@ -93,5 +93,10 @@ Rscript "$monitor_path/scripts/09_resources_heatmap.R" \
   "$monitor_path/logs/recursos_por_nodo.log.gz" \
   "$monitor_path/logs/imagen_recursos_libres.rds"
 
+# Se ejecuta el render de Rmarkdown, el primer arg es la ruta al script.Rmd y el segundo arg es el dataset que lee ese rmd
+Rscript "$monitor_path/scripts/00.runthemd.R" \
+  "$monitor_path/scripts/10_R1_reporte_uso_inadecuado_nodos.Rmd" \
+  "$monitor_path/logs/procesos_por_usuario_online.log.gz"
+
 # re-touch the restart token to update the shiny app
 touch "$monitor_path/restart.txt"
