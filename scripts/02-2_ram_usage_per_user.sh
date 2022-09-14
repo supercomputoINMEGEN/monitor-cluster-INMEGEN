@@ -7,7 +7,7 @@ elhost=$(hostname)
 timestamp=$1
 
 # run smem on all users
-smem -u -p \
+sudo smem -u -p \
 | tr -d "%" \
 | tr -s " " \
 | awk \
