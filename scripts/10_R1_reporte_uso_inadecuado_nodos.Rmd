@@ -36,8 +36,8 @@ limpiada <- procesos_por_usuario %>%
 meses <- 6
 
 # mindate <- min( base$date )
-mindate <- max( limpiada$fecha2 ) - months( meses ) # usar para mostrar siempre los ultimos seis meses
-maxdate <- max( limpiada$fecha2 )
+mindate <- max( limpiada$fecha2, na.rm = TRUE ) - months( meses ) # usar para mostrar siempre los ultimos seis meses
+maxdate <- max( limpiada$fecha2, na.rm = TRUE )
 
 # crear fecha humanas
 minfecha <- format( mindate,
