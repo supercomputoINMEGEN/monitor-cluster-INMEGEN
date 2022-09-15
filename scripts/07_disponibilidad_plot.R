@@ -29,6 +29,7 @@ slots <- vroom( file = ifile, col_names = FALSE ) %>%
   mutate( fecha2 = dmy(fecha),
           hora2 = hm(hora) ) %>% 
   arrange( fecha2, hora2 ) %>% 
+  filter( !is.na( fecha2) ) %>%     # eliminate missing dates
   slice( n() )    # extract the last line after arrange
 
 # plot a waffle
