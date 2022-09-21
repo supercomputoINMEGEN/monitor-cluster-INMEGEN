@@ -16,9 +16,9 @@ ui <- dashboardPage( skin = "purple",
                          menuItem( "Software instalado",
                                    tabName = "installed",
                                    icon = icon( "wrench", lib = "glyphicon" ) ),
-                         menuItem( "Solicita una cuenta",
-                                   tabName = "register",
-                                   icon = icon( "edit", lib = "glyphicon" ) ),
+                         # menuItem( "Solicita una cuenta",
+                         #           tabName = "register",
+                         #           icon = icon( "edit", lib = "glyphicon" ) ),
                          menuItem( "Contacto",
                                    tabName = "contact",
                                    icon = icon( "send", lib = "glyphicon" ) ),
@@ -60,13 +60,15 @@ ui <- dashboardPage( skin = "purple",
                          tabItem( tabName = "contact",
                                   # Boxes need to be put in a row (or column)
                                   fluidRow(
-                                    box( title = "En construccion" )
+                                    column(width = 10, offset = 0,
+                                    includeMarkdown( "contacto.md" ) )
                                   )
                          ),
                          tabItem( tabName = "thanks",
                                   # Boxes need to be put in a row (or column)
                                   fluidRow(
-                                    box( title = "En construccion" )
+                                    column(width = 10, offset = 0,
+                                    includeMarkdown( "agradecimientos.md" ) )
                                   )
                          )
                        ) # este cierra el tabItems(
