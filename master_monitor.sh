@@ -71,7 +71,8 @@ bash "$monitor_path/scripts/ssh-executer.sh" \
 # Se ejecuta el visualizador de nodos en R
 Rscript "$monitor_path/scripts/05_nodos_online.R" \
   "$monitor_path/logs/nodos_online.log.gz" \
-  "$monitor_path/logs/imagen_nodos_online.rds"
+  "$monitor_path/logs/imagen_nodos_online.rds" \
+  "$monitor_path/configs/server_list.tsv"
 
 # se ejectua el ejecutador de scripts por ssh, y el primer argumento es la lista de servidores a revisar, Y  el segundo argumento es el script que vas a mandar por ssh
 bash "$monitor_path/scripts/ssh-executer.sh" \
@@ -93,7 +94,8 @@ bash "$monitor_path/scripts/ssh-executer.sh" \
 # Se ejecuta el visualizador de recursos en R
 Rscript "$monitor_path/scripts/09_resources_heatmap.R" \
   "$monitor_path/logs/recursos_por_nodo.log.gz" \
-  "$monitor_path/logs/imagen_recursos_libres.rds"
+  "$monitor_path/logs/imagen_recursos_libres.rds" \
+  "$monitor_path/configs/server_list.tsv"
 
 # Se ejecuta el render de Rmarkdown, el primer arg es la ruta al script.Rmd y el segundo arg es el dataset que lee ese rmd, el tercer arg es el destino del reporte.pdf
 Rscript "$monitor_path/scripts/00.runthemd.R" \

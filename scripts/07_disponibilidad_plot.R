@@ -14,7 +14,7 @@ p_load( "vroom",
 args <- commandArgs( trailingOnly = TRUE )
 
 # pass args to objects
-ifile <- args[1] # "../logs/disponibilidad_en_condor.log.gz" 
+ifile <- args[1] # <- "../logs/disponibilidad_en_condor.log.gz" 
 ofile <- args[2]
 
 # read data

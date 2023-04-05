@@ -13,8 +13,24 @@ p_load( "vroom",
 args <- commandArgs( trailingOnly = TRUE )
 
 # pass args to objects
-ifile <- args[1] # "../logs/recursos_por_nodo.log.gz" 
+ifile <- args[1]  # <- "../logs/recursos_por_nodo.log.gz" 
 ofile <- args[2]
+serverlist <- args[3] # <- "../configs/server_list.tsv"
+
+# read server list
+server_dictionary <- vroom( file = serverlist,
+                            comment = "#", col_names = FALSE ) %>% 
+  rename( nodo = 1,
+          subsystem = 2 ) %>% 
+  mutate( nodo =  str_replace( string = nodo,
+                               pattern = "fx-st",
+                               replacement = "storage" ) ) %>% 
+  mutate( nodo =  str_replace( string = nodo,
+                               pattern = "central-15",
+                               replacement = "central" ) )
+
+# get the order of subsystem
+subsystems_ordered <- server_dictionary$subsystem %>% unique( )
 
 # create a function do remove magnitud and multiply number
 mag_remover <- function( the_value, the_multiplier ) {
@@ -99,13 +115,20 @@ disk <- recalc %>%
   rename( percent_used = percent_used_disk )
 
 # bind res dfs
-fortiles <- bind_rows( cpu, mem, disk )
+fortiles <- bind_rows( cpu, mem, disk ) %>% 
+  left_join( x = .,
+             y = server_dictionary,
+             by = "nodo" ) %>% 
+  mutate( nodo = factor( nodo,
+                         levels = rev( server_dictionary$nodo ) ) ) %>% 
+  mutate( subsystem = factor( subsystem,
+                              levels = (subsystems_ordered) ) )
 
 res_heatmap <- ggplot( data = fortiles,
                        mapping = aes( x = resource,
                                       y = nodo,
                                       fill = percent_used ) ) +
-  geom_tile( color = "black", size = 0.7,
+  geom_tile( color = "black", linewidth = 0.7,
              height = 0.7,
              width = 0.7 ) +
   geom_text( mapping = aes( label = floor( available ) ),
@@ -141,7 +164,8 @@ res_heatmap <- ggplot( data = fortiles,
     plot.caption = element_text( hjust = 1,
                                   size = 8 ),
     plot.title = element_text( hjust = 0.5 )
-  )
+  ) +
+  facet_wrap( ~ subsystem, ncol = 1, scales = "free_y" )
 
 
 # save plot for easy loading
