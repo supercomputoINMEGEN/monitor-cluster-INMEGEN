@@ -22,7 +22,7 @@
 # scripts/...
 
 # 2. Prueba el monitor ejecuando el script tester con:
-#	bash teste.sh
+#	bash tester.sh
 # (si hay alguna carpeta con logs previos en ./logs, te va a prueguntar si lo quieres borrar)
 
 # 3. luego agregue este script en el crontab. Puede seguir este tutorial: https://linuxhint.com/schedule_crontab_job_every_hour/
