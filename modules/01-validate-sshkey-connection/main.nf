@@ -29,20 +29,18 @@ process validate_sshkey {
 
   script:
   """
-    while read conn
-    do
-        subsystem="\$(echo \$conn | cut -d' ' -f1)"
-        registered_hostname="\$(echo \$conn | cut -d' ' -f2)"
-        ip="\$(echo \$conn | cut -d' ' -f3)"
-        port="\$(echo \$conn | cut -d' ' -f4)"
-        user="\$(echo \$conn | cut -d' ' -f5)"
-        test_result=\$(ssh \
-        -o ConnectTimeout=10 \
-        -i ${params.sshkey} \
-        -p \$port \$user@\$ip \
-        -t 'echo sshkey_OK' || echo sshkey_FAIL )
-        echo "\$subsystem \$registered_hostname \$test_result"
-    done < $SERVER > $SERVER".sshkey_validation.tmp"
+    conn=\$(cat $SERVER)
+    subsystem="\$(echo \$conn | cut -d' ' -f1)"
+    registered_hostname="\$(echo \$conn | cut -d' ' -f2)"
+    ip="\$(echo \$conn | cut -d' ' -f3)"
+    port="\$(echo \$conn | cut -d' ' -f4)"
+    user="\$(echo \$conn | cut -d' ' -f5)"
+    test_result=\$(ssh \
+      -o ConnectTimeout=10 \
+      -i ${params.sshkey} \
+      -p \$port \$user@\$ip \
+      -t 'echo sshkey_OK' || echo sshkey_FAIL)
+    echo "\$conn \$test_result" > $SERVER".sshkey_validation.tmp"
   """
 }
 
