@@ -35,12 +35,13 @@ process validate_sshkey {
     ip="\$(echo \$conn | cut -d' ' -f3)"
     port="\$(echo \$conn | cut -d' ' -f4)"
     user="\$(echo \$conn | cut -d' ' -f5)"
+    test_name="ssh_connection"
     test_result=\$(ssh \
       -o ConnectTimeout=10 \
       -i ${params.sshkey} \
       -p \$port \$user@\$ip \
-      -t 'echo sshkey_OK' || echo sshkey_FAIL)
-    echo "\$conn \$test_result" > $SERVER".sshkey_validation.tmp"
+      -t 'echo ONLINE' || echo OFFLINE)
+    echo "\$conn \$test_name \$test_result" > $SERVER".sshkey_validation.tmp"
   """
 }
 
@@ -76,5 +77,5 @@ workflow VALIDATE_SSHKEY {
 
   emit:
     join_validations.out[0]
-  
+
 }
