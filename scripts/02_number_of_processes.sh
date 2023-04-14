@@ -5,8 +5,6 @@ elhost=$(hostname)
 
 # find users connected
 ps -aux	\
-| grep -v "root" \
-| grep -v "condor" \
 | tr -s " " \
 | cut -d " " -f1 \
 | sort \
