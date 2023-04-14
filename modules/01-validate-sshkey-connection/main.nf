@@ -40,7 +40,7 @@ process validate_sshkey {
         -o ConnectTimeout=10 \
         -i ${params.sshkey} \
         -p \$port \$user@\$ip \
-        -t 'echo sshkey_OK')
+        -t 'echo sshkey_OK' || echo sshkey_FAIL )
         echo "\$subsystem \$registered_hostname \$test_result"
     done < $SERVER > $SERVER".sshkey_validation.tmp"
   """
