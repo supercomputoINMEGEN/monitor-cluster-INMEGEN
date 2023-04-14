@@ -36,12 +36,13 @@ process validate_sshkey {
     port="\$(echo \$conn | cut -d' ' -f4)"
     user="\$(echo \$conn | cut -d' ' -f5)"
     test_name="ssh_connection"
+    test_user="root"
     test_result=\$(ssh \
       -o ConnectTimeout=10 \
       -i ${params.sshkey} \
       -p \$port \$user@\$ip \
-      -t 'echo ONLINE' || echo OFFLINE)
-    echo "\$conn \$test_name \$test_result" > $SERVER".sshkey_validation.tmp"
+      -t 'echo ONLINE \$(hostname)' || echo "NA NA")
+    echo "\$conn \$test_name \$test_user \$test_result" > $SERVER".sshkey_validation.tmp"
   """
 }
 
