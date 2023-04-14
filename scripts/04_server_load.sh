@@ -4,11 +4,9 @@
 elhost=$(hostname)
 
 # find users connected with desired format
-w \
-| head -n1 \
-| cut -d"," -f 4 \
-| cut -d":" -f 2 \
-| tr -d " " \
+loadcpu=$(uptime | cut -d"," -f4 | cut -d":" -f2 | tr -d " ")
+totalcpu=$(nproc)
+echo "$loadcpu/$totalcpu" \
 | awk -v host="$elhost" \
 '
 	BEGIN{ FS=OFS=" " }

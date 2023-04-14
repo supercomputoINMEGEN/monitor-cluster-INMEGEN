@@ -33,7 +33,7 @@ process load_avg {
         -p \$port \$user@\$ip \
         'bash -s' < $SCRIPT \
         || echo "NA NA NA") \
-        | awk -v info="\$conn \$test_name" ' BEGIN{ FS=OFS=" "} {print info, \$0}' 
+        | awk -v info="\$conn \$test_name root" ' BEGIN{ FS=OFS=" "} {print info, \$0}' 
     done < valids.tmp \
     | cat $OLDESTS - > load_avg.tmp # concat previous test log with this test
    
