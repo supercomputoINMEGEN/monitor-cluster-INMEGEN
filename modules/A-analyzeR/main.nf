@@ -2,55 +2,36 @@
 nextflow.enable.dsl=2
 
 /* Define the main processes */
-process getgroups {
+process analyzer {
 
-    publishDir "${params.results_dir}/10-getgroups/", mode:"copyNoFollow"
+    publishDir "${params.results_dir}/A-analyzeR/", mode:"copyNoFollow"
 
     input:
-        path USERS
+        path GROUPS
         path SCRIPT
 
     output:
-        path "allgroups.tmp", emit: getgroups_results
+        path "*.rds", emit: analyzer_results
 
     script:
     """
-    # remove previous test results
-    grep " ONLINE " $USERS | cut -d" " -f1-5 | sort | uniq > valids.tmp
-
-    # loop trough every uniq connection to get all groups
-    while read conn
-    do
-        ## set routes
-        ip="\$(echo \$conn | cut -d' ' -f3)"
-        port="\$(echo \$conn | cut -d' ' -f4)"
-        user="\$(echo \$conn | cut -d' ' -f5)"
-        test_name="groups"
-        # Usaremos ConnectTimeout 10 para darle 10 segundos al comando para establecer conexion
-        (ssh \
-        -o ConnectTimeout=10 \
-        -i ${params.sshkey} \
-        -p \$port \$user@\$ip \
-        'bash -s' < $SCRIPT \
-        || echo "NA NA") \
-        | awk -v info="\$conn \$test_name root" ' BEGIN{ FS=OFS=" "} {print info, \$0}' 
-    done < valids.tmp \
-    | cat $USERS - > allgroups.tmp # concat previous test log with this test
-   
+    Rscript --vanilla A_analyze.R \
+        $GROUPS \
+        ${params.timestamp}
     """
 
 }
 
 /* name a flow for easy import */
-workflow GETGROUPS {
+workflow ANALYZER {
 
     take:
-        all_users
-        scripts_getgroups
+        all_groups
+        scripts_analyzer
 
     main:        
-        getgroups( all_users, scripts_getgroups )
+        analyzer( all_groups, scripts_analyzer )
     
     emit:
-        getgroups.out[0]
+        analyzer.out[0]
 }

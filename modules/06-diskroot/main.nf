@@ -32,7 +32,7 @@ process diskroot {
         -i ${params.sshkey} \
         -p \$port \$user@\$ip \
         'bash -s' < $SCRIPT \
-        || echo "NA NA NA") \
+        || echo "NA NA") \
         | awk -v info="\$conn \$test_name root" ' BEGIN{ FS=OFS=" "} {print info, \$0}' 
     done < valids.tmp \
     | cat $MEMS - > diskroot.tmp # concat previous test log with this test

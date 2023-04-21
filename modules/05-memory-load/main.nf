@@ -11,7 +11,7 @@ process memload {
         path SCRIPT
 
     output:
-        path "memload.tmp", emit: memload
+        path "memload.tmp", emit: memload_results
 
     script:
     """
@@ -32,7 +32,7 @@ process memload {
         -i ${params.sshkey} \
         -p \$port \$user@\$ip \
         'bash -s' < $SCRIPT \
-        || echo "NA NA NA") \
+        || echo "NA NA") \
         | awk -v info="\$conn \$test_name root" ' BEGIN{ FS=OFS=" "} {print info, \$0}' 
     done < valids.tmp \
     | cat $AVGLOAD - > memload.tmp # concat previous test log with this test

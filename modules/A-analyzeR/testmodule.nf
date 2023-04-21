@@ -8,14 +8,14 @@ nextflow.enable.dsl=2
 params.results_dir = "test/results"
 
 /* load workflows for testing env */
-include { GETGROUPS }    from './main.nf'
+include { ANALYZER }    from './main.nf'
 
 /* declare input channel for testing */
-all_users = Channel.fromPath( "test/data/allusers.tmp" )
+all_groups= Channel.fromPath( "test/data/allgroups.tmp" )
 
 /* declare scripts channel for testing */
-scripts_getgroups = Channel.fromPath( "scripts/11_getgroups.sh" )
+scripts_analyzer = Channel.fromPath( "scripts/A_analyze.R" )
 
 workflow {
-  GETGROUPS ( all_users, scripts_getgroups )
+  ANALYZER ( all_groups, scripts_analyzer )
 }
