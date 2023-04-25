@@ -1,2 +1,25 @@
 # dont track logs
 logs/*
+
+## ignore swap files
+*.swp
+
+## ignore Rplots.pdf trash files
+*Rplots.pdf
+
+## ignore nf.logs
+.nextflow.log*
+.nextflow/
+
+## ignore workdir
+work*
+
+# Ignore test subdirectories from nfmodules
+modules/*/test/results/*
+
+# Ignore results from main test
+test/results/
+
+## ignore local R datas
+*.Rdata
+*.Rhistory

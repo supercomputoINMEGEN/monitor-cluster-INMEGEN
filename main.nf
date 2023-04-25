@@ -84,9 +84,6 @@ include { } from './modules/doc_and_param_check.nf'
 /* load functions for testing env */
 include { get_fullParent }  from './modules/useful_functions.nf'
 
-/* define the fullpath for the final location of the reference */
-params.ref_parentdir = get_fullParent( params.reference )
-
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      INPUT PARAMETER VALIDATION BLOCK
@@ -98,7 +95,7 @@ params.ref_parentdir = get_fullParent( params.reference )
 Output directory definition
 Default value to create directory is the parent dir of --input_dir
 */
-params.output_dir = get_fullParent( params.input_dir )
+params.output_dir = get_fullParent( params.connexion_info )
 
 /*
   Results and Intermediate directory definition
@@ -144,3 +141,37 @@ scripts_maxtemp           = Channel.fromPath( "./scripts/09_maxtemp.sh" )
 scripts_getusers          = Channel.fromPath( "./scripts/10_getusers.sh" )
 scripts_getgroups         = Channel.fromPath( "./scripts/11_getgroups.sh" )
 scripts_analyzer          = Channel.fromPath( "./scripts/A_analyze.R" )
+
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    RUN ALL WORKFLOWS
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
+
+//
+// WORKFLOW: Execute a single named workflow for the pipeline
+// See: https://github.com/nf-core/rnaseq/issues/619
+//
+
+workflow {
+
+  all_validations = VALIDATE_SSHKEY ()
+  all_processes = NUMBER_PROCESSES ( all_validations, scripts_number_processes )
+  all_oldest = OLDEST_CONNECTION ( all_processes, scripts_oldest_connection )
+  all_avg = LOAD_AVG ( all_oldest, scripts_load_avg )
+  all_mem = MEMLOAD ( all_avg, scripts_memload )
+  all_diskroot = DISKROOT ( all_mem, scripts_diskroot )
+  all_zpools = ZPOOLS ( all_diskroot, scripts_zpools )
+  all_topdisk = TOPDISK ( all_zpools, scripts_topdisk )
+  all_temp = MAXTEMP ( all_topdisk, scripts_maxtemp )
+  all_users = GETUSERS ( all_temp, scripts_getusers )
+  all_groups = GETGROUPS ( all_users, scripts_getgroups )
+  ANALYZER ( all_groups, scripts_analyzer )
+
+}
+
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    THE END
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
