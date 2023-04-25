@@ -17,5 +17,4 @@ current_date=$(date "+%Y-%m-%d_%H:%M")
 nextflow run testmodule.nf \
     --debug true \
     --timestamp $current_date \
-&& echo "[>>>] Module Test Successful" \
-&& rm -rf work                # delete workdir only if final results were found
+&& echo "[>>>] Module Test Successful"

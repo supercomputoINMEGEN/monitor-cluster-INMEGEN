@@ -5,7 +5,7 @@ nextflow.enable.dsl=2
 // NONE
 
 /* define the fullpath for the final location of the outs */
-params.results_dir = "test/results"
+params.intermediates_dir = params.results_dir = "test/results"
 
 /* load workflows for testing env */
 include { DISKROOT }    from './main.nf'

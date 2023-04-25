@@ -4,7 +4,7 @@ nextflow.enable.dsl=2
 /* Define the main processes */
 process zpools {
 
-    publishDir "${params.results_dir}/07-zpools/", mode:"copyNoFollow"
+    publishDir "${params.intermediates_dir}/07-zpools/", mode:"symlink"
 
     input:
         path DISKROOT

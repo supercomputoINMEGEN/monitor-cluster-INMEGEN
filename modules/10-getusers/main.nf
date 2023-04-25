@@ -4,7 +4,7 @@ nextflow.enable.dsl=2
 /* Define the main processes */
 process getusers {
 
-    publishDir "${params.results_dir}/10-getusers/", mode:"copyNoFollow"
+    publishDir "${params.intermediates_dir}/10-getusers/", mode:"symlink"
 
     input:
         path TEMPS

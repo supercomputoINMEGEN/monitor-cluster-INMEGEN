@@ -4,7 +4,7 @@ nextflow.enable.dsl=2
 /* Define the main processes */
 process number_processes {
 
-    publishDir "${params.results_dir}/02-number-processes/", mode:"copyNoFollow"
+    publishDir "${params.intermediates_dir}/02-number-processes/", mode:"symlink"
 
     input:
         path VALIDATIONS

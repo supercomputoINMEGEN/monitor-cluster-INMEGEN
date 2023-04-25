@@ -4,7 +4,7 @@ nextflow.enable.dsl=2
 /* Define the main processes */
 process topdisk {
 
-    publishDir "${params.results_dir}/08-top3disks/", mode:"copyNoFollow"
+    publishDir "${params.intermediates_dir}/08-top3disks/", mode:"symlink"
 
     input:
         path ZPOOLS

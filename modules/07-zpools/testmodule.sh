@@ -13,5 +13,4 @@ mkdir -p test/results
 # run nf script
 nextflow run testmodule.nf \
     --debug true \
-&& echo "[>>>] Module Test Successful" \
-&& rm -rf work                # delete workdir only if final results were found
+&& echo "[>>>] Module Test Successful"

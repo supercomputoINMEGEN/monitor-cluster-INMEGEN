@@ -4,7 +4,7 @@ nextflow.enable.dsl=2
 /* Define the main processes */
 process maxtemp {
 
-    publishDir "${params.results_dir}/09-maxtemp/", mode:"copyNoFollow"
+    publishDir "${params.intermediates_dir}/09-maxtemp/", mode:"symlink"
 
     input:
         path TOPDISK

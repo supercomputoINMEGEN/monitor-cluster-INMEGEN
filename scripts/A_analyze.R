@@ -275,26 +275,26 @@ all_resources.p <- ggplot( data = all_resources,
                                           y = registered_and_hostname,
                                           fill = perc,
                                           label = label ) ) +
-  geom_tile( color = "white", alpha = 0.3, size = 5 ) +
+  geom_tile( color = "white", alpha = 0.3, size = 3 ) +
   geom_text( ) +
   scale_y_discrete( limits = unique( ordered_servers$registered_and_hostname ) ) +
   scale_x_discrete( limits = c( "load_avg_1min", "load_mem",
                                 "load_rootdisk", "maxtemp_C" ),
                     labels = c( "CPU threads", "RAM mem",
-                                "/ disk", "temperature " ) ) +
+                                "/ disk", "temperature " ), position = "top" ) +
   scale_fill_gradient2( low = "green", mid = "yellow",
                         high = "red", midpoint = 0.5, limits = c( 0, 1) ) +
   labs( title = "Recursos Disponibles",
         subtitle = the_subtitle,
-        caption = the_caption ) +
-  theme_light( ) +
+        caption = the_caption,
+        x = "Recurso",
+        y = "nombre registrado( hostname )"  ) +
+  theme_light( base_size = 15 ) +
   theme(
     legend.position = "none",
     plot.title = element_text( hjust = 0.5 ),
     plot.subtitle = element_text( hjust = 0.5,
                                   size = 7 ),
-    strip.background = element_rect( fill = "white" ),
-    strip.text = element_text( color = "black" ),
     panel.grid = element_blank( ) )
 
 # save plot for easy loading

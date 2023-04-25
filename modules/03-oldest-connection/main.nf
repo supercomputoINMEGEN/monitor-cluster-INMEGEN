@@ -4,7 +4,7 @@ nextflow.enable.dsl=2
 /* Define the main processes */
 process oldest_connection {
 
-    publishDir "${params.results_dir}/03-oldest-connection/", mode:"copyNoFollow"
+    publishDir "${params.intermediates_dir}/03-oldest-connection/", mode:"symlink"
 
     input:
         path PROCESSES

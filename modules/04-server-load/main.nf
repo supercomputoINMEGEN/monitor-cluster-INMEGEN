@@ -4,7 +4,7 @@ nextflow.enable.dsl=2
 /* Define the main processes */
 process load_avg {
 
-    publishDir "${params.results_dir}/04-server-load/", mode:"copyNoFollow"
+    publishDir "${params.intermediates_dir}/04-server-load/", mode:"symlink"
 
     input:
         path OLDESTS

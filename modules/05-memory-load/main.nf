@@ -4,7 +4,7 @@ nextflow.enable.dsl=2
 /* Define the main processes */
 process memload {
 
-    publishDir "${params.results_dir}/05-memory-load/", mode:"copyNoFollow"
+    publishDir "${params.intermediates_dir}/05-memory-load/", mode:"symlink"
 
     input:
         path AVGLOAD

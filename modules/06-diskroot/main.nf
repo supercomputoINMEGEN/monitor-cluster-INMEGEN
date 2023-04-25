@@ -4,7 +4,7 @@ nextflow.enable.dsl=2
 /* Define the main processes */
 process diskroot {
 
-    publishDir "${params.results_dir}/06-diskroot/", mode:"copyNoFollow"
+    publishDir "${params.intermediates_dir}/06-diskroot/", mode:"symlink"
 
     input:
         path MEMS

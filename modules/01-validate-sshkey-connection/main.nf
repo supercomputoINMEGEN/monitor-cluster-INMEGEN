@@ -48,7 +48,7 @@ process validate_sshkey {
 
 process join_validations {
 
-  publishDir "${params.results_dir}/01-validate-sshkey-connection/", mode:"copyNoFollow"
+  publishDir "${params.intermediates_dir}/01-validate-sshkey-connection/", mode:"symlink"
 
   input:
     path  VALIDATIONS
