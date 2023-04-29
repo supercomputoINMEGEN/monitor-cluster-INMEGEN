@@ -81,19 +81,19 @@ ui <- dashboardPage( skin = "purple",
 server <- function(input, output) {
   
   output$nodos_online <- renderPlot(
-    readRDS( file = "test/results/cluster_monitor-results/A-analyzeR/online_test.rds" )
+    readRDS( file = "monitor-results/cluster_monitor-results/A-analyzeR/online_test.rds" )
   )
   output$vieja_conexion <- renderPlot(
-    readRDS( file = "test/results/cluster_monitor-results/A-analyzeR/oldest_connection.rds" )
+    readRDS( file = "monitor-results/cluster_monitor-results/A-analyzeR/oldest_connection.rds" )
   )
   output$numero_procesos <- renderPlot(
-    readRDS( file = "test/results/cluster_monitor-results/A-analyzeR/number_of_process.rds" )
+    readRDS( file = "monitor-results/cluster_monitor-results/A-analyzeR/number_of_process.rds" )
   )
   # output$slots_disponibilidad <- renderPlot(
   #   readRDS( file = "logs/imagen_disponibilidad.rds" )
   # )
   output$nodos_recursos <- renderPlot(
-    readRDS( file = "test/results/cluster_monitor-results/A-analyzeR/all_resources.rds" )
+    readRDS( file = "monitor-results/cluster_monitor-results/A-analyzeR/all_resources.rds" )
   )
 }
 

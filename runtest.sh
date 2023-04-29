@@ -1,6 +1,6 @@
 #input_conn="conexioninfo/local.txt"
 #input_conn="conexioninfo/remote.txt"
-output_directory="test/results"
+output_directory="monitor-results"
 
 # get the date to stamp the data
 current_date=$(date "+%Y-%m-%d_%H:%M")

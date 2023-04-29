@@ -26,6 +26,12 @@ incluye PDFS para mostrar en la UI
 
 2 clonar este repo en tu directorio shiny. p.ej. /srv/shiny-server/myapps/monitor-cluster-INMEGEN
 
+''''
+cd /srv/shiny-server
+cd myapps/
+git clone git@github.com:Iaguilaror/monitor-cluster-INMEGEN.git
+''''
+
 3 configurar el nextflow.config
 
 4 ejecutar bash runtest.sh para validar que todo funciona
