@@ -39,7 +39,6 @@ process validate_sshkey {
     test_user="root"
     test_result=\$(ssh \
       -o ConnectTimeout=10 \
-      -i ${params.sshkey} \
       -p \$port \$user@\$ip \
       -t 'echo ONLINE \$(hostname)' || echo "NA NA")
     echo "\$conn \$test_name \$test_user \$test_result" > $SERVER".sshkey_validation.tmp"

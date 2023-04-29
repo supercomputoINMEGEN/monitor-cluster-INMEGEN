@@ -29,7 +29,6 @@ process number_processes {
         # Usaremos ConnectTimeout 10 para darle 10 segundos al comando para establecer conexion
         (ssh \
         -o ConnectTimeout=10 \
-        -i ${params.sshkey} \
         -p \$port \$user@\$ip \
         'bash -s' < $SCRIPT \
         || echo "NA NA NA") \
