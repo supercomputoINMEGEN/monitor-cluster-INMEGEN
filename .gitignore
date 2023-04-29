@@ -23,3 +23,6 @@ test/results/
 ## ignore local R datas
 *.Rdata
 *.Rhistory
+
+# ignore monitor results
+monitor-results/

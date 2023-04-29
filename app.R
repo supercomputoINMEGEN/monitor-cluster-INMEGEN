@@ -64,14 +64,14 @@ ui <- dashboardPage( skin = "purple",
                                   # Boxes need to be put in a row (or column)
                                   fluidRow(
                                     column(width = 10, offset = 0,
-                                           includeMarkdown( "contacto.md" ) )
+                                           includeMarkdown( "WWW/contacto.md" ) )
                                   )
                          ),
                          tabItem( tabName = "thanks",
                                   # Boxes need to be put in a row (or column)
                                   fluidRow(
                                     column(width = 10, offset = 0,
-                                           includeMarkdown( "agradecimientos.md" ) )
+                                           includeMarkdown( "WWW/agradecimientos.md" ) )
                                   )
                          )
                        ) # este cierra el tabItems(

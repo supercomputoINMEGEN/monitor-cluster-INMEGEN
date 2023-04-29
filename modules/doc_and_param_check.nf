@@ -69,13 +69,7 @@ try {
     if they were not provided, they keep the 'false' value assigned in the parameter initiation block above and this test fails
 */
 if ( !params.connexion_info ) {
-  log.error " Please provide the following params: --input_dir \n\n" +
-  " For more information, execute: nextflow run main.nf --help"
-  exit 1
-}
-
-if ( !params.sshkey ) {
-  log.error " Please provide the following params: --reference \n\n" +
+  log.error " Please provide the following params: --connexion_info \n\n" +
   " For more information, execute: nextflow run main.nf --help"
   exit 1
 }

@@ -1,4 +1,5 @@
-input_conn="conexioninfo/local.txt"
+#input_conn="conexioninfo/local.txt"
+#input_conn="conexioninfo/remote.txt"
 output_directory="test/results"
 
 # get the date to stamp the data
@@ -8,7 +9,6 @@ echo -e "======\n Testing NF execution \n======" \
 && rm -rf $output_directory \
 && rm -rf work \
 && nextflow run main.nf \
-	--connexion_info	"$input_conn" \
 	--output_dir	"$output_directory" \
 	--timestamp $current_date \
 	-resume \

@@ -23,3 +23,13 @@ incluye PDFS para mostrar en la UI
 # Configuracion del monitor
 
 1 Verificar que se puede hacer SSH con ssh-key a cada nodo en conexioninfo/serverlist.tsv
+
+2 clonar este repo en tu directorio shiny. p.ej. /srv/shiny-server/myapps/monitor-cluster-INMEGEN
+
+3 configurar el nextflow.config
+
+4 ejecutar bash runtest.sh para validar que todo funciona
+
+5 configurar un cronjob, por ejemplo:
+# m h  dom mon dow   command
+*/15 * * * * /srv/shiny-server/myapps/monitor-cluster-INMEGEN/launcher.sh
