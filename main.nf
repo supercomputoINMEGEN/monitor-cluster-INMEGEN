@@ -126,6 +126,7 @@ include { MAXTEMP }           from  './modules/09-maxtemp'
 include { GETUSERS }          from  './modules/10-getusers'
 include { GETGROUPS }         from  './modules/11-getgroups'
 include { ANALYZER }          from  './modules/A-analyzeR'
+include { RMD_REPORT }        from  './modules/B-rmdreports'
 include { RECORDCONFIG }      from  './modules/Z-recordconfigs'
 
 /* load scripts to send to workdirs */
@@ -142,6 +143,7 @@ scripts_maxtemp           = Channel.fromPath( "./scripts/09_maxtemp.sh" )
 scripts_getusers          = Channel.fromPath( "./scripts/10_getusers.sh" )
 scripts_getgroups         = Channel.fromPath( "./scripts/11_getgroups.sh" )
 scripts_analyzer          = Channel.fromPath( "./scripts/A_analyze.R" )
+scripts_rmd_reports       = Channel.fromPath( "./scripts/B_*" ).toList()
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -169,6 +171,9 @@ workflow {
   all_groups = GETGROUPS ( all_users, scripts_getgroups )
   ANALYZER ( all_groups, scripts_analyzer )
 
+  /* read past logs; note: what happens if this is the first time it runs and there is no logs...? */
+  all_logsgz = Channel.fromPath( "logs/*.gz" ).toList()
+  RMD_REPORT ( all_logsgz, scripts_rmd_reports )
 
   /* declare input channel for recording configs */
   nfconfig = Channel.fromPath( "nextflow.config" )
