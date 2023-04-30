@@ -28,6 +28,7 @@ process getusers {
         test_name="users"
         # Usaremos ConnectTimeout 10 para darle 10 segundos al comando para establecer conexion
         (ssh \
+        -i ${params.sshkey} \
         -o ConnectTimeout=10 \
         -p \$port \$user@\$ip \
         'bash -s' < $SCRIPT \

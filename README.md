@@ -37,5 +37,6 @@ git clone git@github.com:Iaguilaror/monitor-cluster-INMEGEN.git
 4 ejecutar bash runtest.sh para validar que todo funciona
 
 5 configurar un cronjob, por ejemplo:
+sudo crontab -e
 # m h  dom mon dow   command
-*/15 * * * * /srv/shiny-server/myapps/monitor-cluster-INMEGEN/launcher.sh
+*/20 * * * * su iaguilar -c "/srv/shiny-server/myapps/monitor-cluster-INMEGEN/launcher.sh"

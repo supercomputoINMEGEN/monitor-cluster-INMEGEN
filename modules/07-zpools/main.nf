@@ -28,6 +28,7 @@ process zpools {
         test_name="zpool_list;NAME_SIZE_ALLOC_FREE_EXPANDSZ_FRAG_CAP_DEDUP_HEALTH_ALTROOT"
         # Usaremos ConnectTimeout 10 para darle 10 segundos al comando para establecer conexion
         (ssh \
+        -i ${params.sshkey} \
         -o ConnectTimeout=10 \
         -p \$port \$user@\$ip \
         'bash -s' < $SCRIPT \

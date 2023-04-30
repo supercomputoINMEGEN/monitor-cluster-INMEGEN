@@ -6,7 +6,6 @@ output_directory="monitor-results"
 current_date=$(date "+%Y-%m-%d_%H:%M")
 
 echo -e "======\n Testing NF execution \n======" \
-&& rm -rf $output_directory \
 && rm -rf work \
 && nextflow run main.nf \
 	--output_dir	"$output_directory" \

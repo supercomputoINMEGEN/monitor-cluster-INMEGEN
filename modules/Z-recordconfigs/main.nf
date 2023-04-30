@@ -18,10 +18,10 @@ process recordconfig {
     echo "===== nextflow.config ====="
     cat $CONFIG 
     echo "===== END OF CONFIG ====="
+    echo \$USER
+    echo \$HOME 
     echo "===== ENV variables ====="
-    echo "user: $USER"
-    echo "home: $HOME"
-    ) > configs.txt
+     ) > configs.txt
     """
 
 }

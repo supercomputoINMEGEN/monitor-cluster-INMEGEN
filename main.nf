@@ -126,6 +126,7 @@ include { MAXTEMP }           from  './modules/09-maxtemp'
 include { GETUSERS }          from  './modules/10-getusers'
 include { GETGROUPS }         from  './modules/11-getgroups'
 include { ANALYZER }          from  './modules/A-analyzeR'
+include { RECORDCONFIG }      from  './modules/Z-recordconfigs'
 
 /* load scripts to send to workdirs */
 /* declare scripts channel from modules */
@@ -167,6 +168,11 @@ workflow {
   all_users = GETUSERS ( all_temp, scripts_getusers )
   all_groups = GETGROUPS ( all_users, scripts_getgroups )
   ANALYZER ( all_groups, scripts_analyzer )
+
+
+  /* declare input channel for recording configs */
+  nfconfig = Channel.fromPath( "nextflow.config" )
+  RECORDCONFIG( nfconfig )
 
 }
 
