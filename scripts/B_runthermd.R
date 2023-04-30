@@ -1,0 +1,20 @@
+# This script exists as an interface to pass parameters to RMD in an ordered manner
+
+## Read args from command line
+args = commandArgs( trailingOnly = TRUE )
+
+## Uncomment For debugging only
+## Comment for production mode only
+# args[1] <- "scripts/B_R1_reporte_uso_inadecuado_nodos.Rmd"
+
+## Passing args to named objects
+rmd_file <- args[1]
+
+# define the localdir to avoid errors during rendering
+localdir <- getwd( )
+
+# call the renderizer
+rmarkdown::render(  input = rmd_file,
+                    output_dir = localdir, # if we dont fix the wd here, knit will fail when NF tries to execute it from a different workdir
+                    intermediates_dir = localdir, # if we dont fix the wd here, knit will fail when NF tries to execute it from a different workdir
+                    knit_root_dir = localdir ) # if we dont fix the wd here, knit will fail when NF tries to execute it from a different workdir
