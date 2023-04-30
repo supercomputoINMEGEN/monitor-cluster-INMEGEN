@@ -129,7 +129,8 @@ ggplot( data = promedios,
 ```{r, comment = FALSE, echo = FALSE, warning = FALSE, message = FALSE}
 # imprimimos tabla
 enfalta %>% 
-  arrange( fecha, -promedio_procesos ) %>% 
+  arrange( subsystem, fecha, -promedio_procesos ) %>% 
+  select( subsystem, registered_name, hostname, fecha, user, promedio_procesos ) %>% 
   kable( x = . )
 
 ```
