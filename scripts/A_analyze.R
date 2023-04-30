@@ -25,10 +25,10 @@ the_date <- unlist(strsplit( x = timest, split = "_" ))[1]
 the_time <- unlist(strsplit( x = timest, split = "_" ))[2]
 
 #
-the_subtitle <- paste("Ultima revision",
-                      wday( the_date, label = TRUE ),
-                      the_date,
-                      the_time )
+the_subtitle <- paste( "Ultima revision",
+                       wday( the_date, label = TRUE ),
+                       the_date,
+                       the_time )
 
 the_caption <- "Jefatura de Supercomputo - INMEGEN"
 
@@ -46,6 +46,21 @@ the_data <- vroom( file = ifile, col_names = FALSE, show_col_types = FALSE ) %>%
   mutate( date = ymd( the_date ),
           time = hm( the_time ),
           registered_and_hostname = paste0( registered_name, "(", hostname, ")" ) )
+
+# save the data with timestamp
+# prepare name for data save
+ofile_tsv <- paste(  the_date,
+                     str_replace( string = the_time, pattern = ":", replacement = "-"),
+                     "monitor-cluster-log.tsv", sep = "_" )
+
+the_data %>% 
+  select( -ip_or_domain, -port, -login, -date, -time, -registered_and_hostname  ) %>% 
+write.table( x = ., 
+             file = ofile_tsv,
+             append = FALSE, quote = FALSE, sep = "\t",
+             row.names = FALSE, col.names = TRUE )
+
+system( "gzip -9 *_monitor-cluster-log.tsv" )
 
 # Define server order
 ordered_servers <- the_data %>% 

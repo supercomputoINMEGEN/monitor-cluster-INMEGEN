@@ -26,3 +26,4 @@ test/results/
 
 # ignore monitor results
 monitor-results/
+NFrun.log

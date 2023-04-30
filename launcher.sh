@@ -14,4 +14,4 @@ output_directory="monitor-results"
 rm -rf work \
 && nextflow run main.nf \
   --output_dir "$output_directory" \
-  --timestamp  $current_date > logs/NFrun.log
+  --timestamp  $current_date > NFrun.log
