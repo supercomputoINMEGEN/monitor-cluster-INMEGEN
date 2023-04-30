@@ -6,12 +6,14 @@ args = commandArgs( trailingOnly = TRUE )
 ## Uncomment For debugging only
 ## Comment for production mode only
 # args[1] <- "scripts/B_R1_reporte_uso_inadecuado_nodos.Rmd"
+# args[2] <- "_inactividad_nodos"
 
 ## Passing args to named objects
 rmd_file <- args[1]
-## Create the a custom output name for the rmd
-output_pdf <- paste0( Sys.Date(),"_uso_inadecuado_nodos", ".pdf") 
+ofile_sufix <- args[2]
 
+## Create the a custom output name for the rmd
+output_pdf <- paste0( Sys.Date(), ofile_sufix, ".pdf" )
 
 # define the localdir to avoid errors during rendering
 localdir <- getwd( )
