@@ -13,7 +13,8 @@ p_load( "vroom",
         "gdata" )
 
 # Parametrize
-max_days_for_connection <- 14 # max days to flag an old connection as warning
+max_days_for_connection <- 14            # max days to flag an old connection as warning
+max_fracc_for_waring_on_top3disk <- 0.5  # mas percentage (as fraction 0.5 = 50%) to mark as warning on disk usage
 
 #read args from command line
 args <- commandArgs( trailingOnly = TRUE )
@@ -57,10 +58,10 @@ ofile_tsv <- paste(  the_date,
 
 the_data %>% 
   select( -ip_or_domain, -port, -login, -date, -time, -registered_and_hostname  ) %>% 
-write.table( x = ., 
-             file = ofile_tsv,
-             append = FALSE, quote = FALSE, sep = "\t",
-             row.names = FALSE, col.names = TRUE )
+  write.table( x = ., 
+               file = ofile_tsv,
+               append = FALSE, quote = FALSE, sep = "\t",
+               row.names = FALSE, col.names = TRUE )
 
 system( "gzip -9 *_monitor-cluster-log.tsv" )
 
@@ -172,7 +173,7 @@ saveRDS( object = number_of_process.p,
 oldest_connection <- the_data %>% 
   filter( test == "oldest_connection" ) %>% 
   select( subsystem, registered_name, user, value, hostname ) %>%
-  mutate( fecha = dmy( value ) ) %>% 
+  mutate( fecha = dmy( value, quiet = TRUE ) ) %>% 
   filter( ! is.na( hostname ) ) %>% 
   mutate( oldest_conn = interval( fecha, ymd(the_date) ) %/% days(1),   # calculate number of days to the oldest connection
           fecha_flag = ifelse( test = oldest_conn > max_days_for_connection,
@@ -318,8 +319,74 @@ all_resources.p <- ggplot( data = all_resources,
 saveRDS( object = all_resources.p,
          file = "all_resources.rds" )
 
-### plot Oldest top3disks, zpool_list;NAME_SIZE_ALLOC_FREE_EXPANDSZ_FRAG_CAP_DEDUP_HEALTH_ALTROOT ====
+### plot Oldest top3disks ====
+top3disks <- the_data %>% 
+  filter( test == "top3disks" ) %>% 
+  select( subsystem, registered_and_hostname, value ) %>% 
+  separate( col = value,
+            into = paste0( "c", 1:3 ),
+            sep = ",",
+            remove = TRUE ) %>% 
+  rename( used = c1,
+          available = c2,
+          disk = c3 ) %>% 
+  mutate( used = str_remove( string = used, pattern = "used_" ),
+          available = str_remove( string = available, pattern = "available_" ),
+          disk = str_replace( string = disk, pattern = "disk_", replacement = "@" ),
+          disk = paste0( registered_and_hostname, disk ) ) %>% 
+  select( -registered_and_hostname ) %>% 
+  mutate( used_value = as.numeric( gsub("[a-zA-Z]", "", used ) ),
+          used_unit = gsub("[^a-zA-Z]", "", used ) ) %>% 
+  mutate( available_value = as.numeric( gsub("[a-zA-Z]", "", available ) ),
+          available_unit = gsub("[^a-zA-Z]", "", available ) ) %>% 
+  mutate( used_unit = ifelse( test = used_value == 0,
+                              yes = "G",
+                              no = used_unit ) ) %>% 
+  mutate( available_unit = ifelse( test = available_value == 0,
+                                   yes = "G",
+                                   no = available_unit ) ) %>% 
+  mutate( used_gigas = case_when( used_unit == "G" ~ used_value,
+                                  used_unit == "T" ~ used_value * 1000,
+                                  used_unit == "P" ~ used_value * 1000000 )  ) %>% 
+  mutate( available_gigas = case_when( available_unit == "G" ~ available_value,
+                                       available_unit == "T" ~ available_value * 1000,
+                                       available_unit == "P" ~ available_value * 1000000 )  ) %>%
+  mutate( total_gigas = used_gigas + available_gigas ) %>% 
+  mutate( perc = used_gigas / total_gigas ) %>% 
+  mutate( label = paste( "disp:", available_gigas, "G",
+                         "\nused:", percent( perc, accuracy = 0.1 ) ) ) %>% 
+  select( subsystem, disk, perc )
 
-### compare users ====
+# plot columns for offending %disk
 
-### compare groups ====
+top3disks.p <- ggplot( mapping = aes( x = disk,
+                                      y = perc ) ) +
+  geom_col( data = filter( top3disks, perc < max_fracc_for_waring_on_top3disk ),
+            width = 0.1, fill = "gray50" ) +
+  geom_col( data = filter( top3disks, perc >= max_fracc_for_waring_on_top3disk ),
+            width = 0.1, fill = "tomato" ) +
+  geom_text( data = filter( top3disks, perc >= max_fracc_for_waring_on_top3disk ),
+             mapping = aes( label = disk ),
+             angle = 90, nudge_y = 0.1 ) +
+  geom_hline( yintercept = max_fracc_for_waring_on_top3disk,
+              lty = "dashed",
+              color = "tomato" ) +
+  scale_y_continuous( limits = c( 0, 1 ),
+                      breaks = seq( from = 0, to = 1, by = 0.25 ),
+                      labels = percent ) +
+  labs( title = "% usado en los Top3 discos por tamano total",
+        subtitle = "de cada servidor",
+        x = "discos",
+        y = "% de disco usado" ) +
+  theme_light( base_size = 15 ) +
+  theme( axis.text.x =  element_blank( ),
+         panel.grid.major.x = element_blank( ),
+         strip.background = element_rect( color = "black", fill = "white" ),
+         strip.text = element_text( color = "black" ) ) +
+  facet_wrap( ~ subsystem, scales = "free_x" )
+
+# save plot for easy loading
+saveRDS( object = top3disks.p,
+         file = "top3disks.rds" )
+
+### zpool_list;NAME_SIZE_ALLOC_FREE_EXPANDSZ_FRAG_CAP_DEDUP_HEALTH_ALTROOT ====
