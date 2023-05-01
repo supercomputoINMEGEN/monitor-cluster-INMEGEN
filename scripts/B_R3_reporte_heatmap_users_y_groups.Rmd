@@ -16,6 +16,7 @@ p_load( "vroom",
         "purrr",
         "stringr",
         "scales",
+        "ggsci",
         "lubridate",
         "ggplot2" )
 
@@ -156,6 +157,32 @@ user_heatmap.f( the_data = periodo, the_subtitle = "Todos los usuarios" )
 user_heatmap.f( the_data = filter( periodo, uniqueUID == "ERROR" ),
                 the_subtitle = "Solo errores" )
 ```
+# Ver los SHELLS de cada usuario  
+
+```{r, comment = FALSE, echo = FALSE, warning = FALSE, message = FALSE, fig.width = 10, fig.height = 10, dpi =  600 }
+
+# preparar eje y
+yorder <- periodo %>% 
+  group_by( user, uniqueUID ) %>% 
+  summarise( nservers = n( ),
+             mean_value = mean( as.numeric( UID ) ) ) %>% 
+  ungroup( ) %>% 
+  arrange( uniqueUID, -mean_value, -nservers )
+
+ggplot( data = periodo,
+        mapping = aes( x = registered_and_hostname,
+                       y = user,
+                       color = shell ) ) +
+  geom_point( size = 2 ) +
+  scale_x_discrete( limits = rev( xorder ), position = "top" ) + 
+  scale_y_discrete( limits = rev( yorder$user ) ) +
+  scale_color_npg( limits = rev ) +
+  labs( title = "Shells en cada nodo" ) +
+  theme_light( ) +
+  theme( panel.grid = element_blank( ),
+         axis.text.y = element_text( size = 5 ) )
+
+```
 
 # GRUPOS:
 
@@ -234,9 +261,7 @@ group_heatmap.f( the_data = periodo_grupos, the_subtitle = "Todos los usuarios" 
 
 ```{r, comment = FALSE, echo = FALSE, warning = FALSE, message = FALSE, fig.width = 10, fig.height = 10, dpi =  600 }
 group_heatmap.f( the_data = filter( periodo_grupos, uniqueGID == "ERROR" ),
-                the_subtitle = "Solo errores" )
-```
-
+                 the_subtitle = "Solo errores" )
 ```
 
 ### Fin del reporte: `r format(Sys.time(), "%A %d %B %Y")`
