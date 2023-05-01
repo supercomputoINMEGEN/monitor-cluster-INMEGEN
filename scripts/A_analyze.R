@@ -1,4 +1,6 @@
 # load libs
+
+#install.packages( "pacman", repos = "http://cran.us.r-project.org" )
 library("pacman")
 
 p_load( "vroom",

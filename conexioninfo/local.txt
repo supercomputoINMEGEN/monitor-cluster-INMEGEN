@@ -1,7 +1,19 @@
 # subsytem registered_hostname ip port user
 OLD_CLUSTER corellia 10.0.15.10 22 itadmin
+OLD_CLUSTER central 10.0.15.5 22 itadmin
+OLD_CLUSTER notron 10.0.15.8 22 itadmin
+OLD_CLUSTER indra 10.0.15.9 22 itadmin
+OLD_CLUSTER drona 10.0.15.11 22 itadmin
 FENIX fx-lg 10.0.15.6 22 itadmin
 FENIX fx-gpu 10.0.15.7 22 itadmin
 FENIX fx-ld1 10.0.15.13 22 itadmin
 FENIX fx-ld2 10.0.15.51 22 itadmin
 FENIX fx-hd 10.0.15.12 22 itadmin
+FENIX fx-st 10.0.11.97 22 itadmin
+PEGASO pg-lg 10.0.15.86 22 itadmin
+PEGASO pg-gpu 10.0.15.85 22 itadmin
+PEGASO pg-ld1 10.0.15.25 22 itadmin
+PEGASO pg-ld2 10.0.15.70 22 itadmin
+PEGASO pg-hd 10.0.15.75 22 itadmin
+PEGASO pg-storage-ha2 10.0.15.52 22 itadmin
+PEGASO pg-storage-ha1 10.0.15.21 22 itadmin

@@ -39,4 +39,4 @@ git clone git@github.com:Iaguilaror/monitor-cluster-INMEGEN.git
 5 configurar un cronjob, por ejemplo:
 sudo crontab -e
 # m h  dom mon dow   command
-*/20 * * * * su iaguilar -c "/srv/shiny-server/myapps/monitor-cluster-INMEGEN/launcher.sh"
+*/20 * * * * su itadmin -c "/srv/shiny-server/myapps/monitor-cluster-INMEGEN/launcher.sh"

@@ -1,4 +1,5 @@
 # This script exists as an interface to pass parameters to RMD in an ordered manner
+pacman::p_load( "rmarkdown" )
 
 ## Read args from command line
 args = commandArgs( trailingOnly = TRUE )
