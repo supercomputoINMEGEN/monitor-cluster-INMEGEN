@@ -39,7 +39,11 @@ ui <- dashboardPage( skin = "purple",
                                     # box( plotOutput( "slots_disponibilidad", height = 250 ) )
                                   ),
                                   fluidRow(
-                                    box( plotOutput( "nodos_online", height = 250 ) ),
+                                    box( plotOutput( "nodos_online", height = 500 ) ),
+                                    box( plotOutput( "top3disks", height = 500 ) )
+                                    
+                                  ),
+                                  fluidRow(
                                     box( plotOutput( "numero_procesos", height = 1000 ) )
                                     
                                   )
@@ -94,6 +98,9 @@ server <- function(input, output) {
   # )
   output$nodos_recursos <- renderPlot(
     readRDS( file = "monitor-results/cluster_monitor-results/A-analyzeR/all_resources.rds" )
+  )
+  output$top3disks <- renderPlot(
+    readRDS( file = "monitor-results/cluster_monitor-results/A-analyzeR/top3disks.rds" )
   )
 }
 
