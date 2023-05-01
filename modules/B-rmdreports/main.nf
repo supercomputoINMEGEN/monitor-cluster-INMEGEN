@@ -42,6 +42,26 @@ process rmd_report_2 {
 
 }
 
+process rmd_report_3 {
+
+    publishDir "${params.results_dir}/B-rmdreports/", mode:"copyNoFollow"
+
+    input:
+        path LOGS
+        path SCRIPTS
+
+    output:
+        path "*.pdf"
+
+    script:
+    """
+    Rscript --vanilla B_runthermd.R \
+        B_R3_reporte_heatmap_users_y_groups.Rmd \
+        "_reporte_heatmap_users_y_groups"
+    """
+
+}
+
 /* name a flow for easy import */
 workflow RMD_REPORT {
 
@@ -52,7 +72,6 @@ workflow RMD_REPORT {
     main:        
         rmd_report_1( all_logsgz, scripts_rmd_reports )
         rmd_report_2( all_logsgz, scripts_rmd_reports )
-    
-    emit:
-        rmd_report_1.out[0]
+        rmd_report_3( all_logsgz, scripts_rmd_reports )
+
 }

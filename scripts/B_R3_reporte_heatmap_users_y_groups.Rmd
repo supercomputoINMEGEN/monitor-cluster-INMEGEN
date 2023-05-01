@@ -1,0 +1,242 @@
+---
+title: "Reporte Semestral de inactividad de nodos de computo"
+author: Jefatura de Supercomputo - Subdireccion de Bioinformatica Inmegen
+date: fecha de reporte "`r format(Sys.time(), "%A %d %B %Y %X ")`"
+output: pdf_document
+---
+```{r, comment = FALSE, echo = FALSE, warning = FALSE, message = FALSE}
+# cargar libs
+library( "pacman" )
+
+# cargar paquetes
+p_load( "vroom",
+        "knitr",
+        "dplyr",
+        "tidyr",
+        "purrr",
+        "stringr",
+        "scales",
+        "lubridate",
+        "ggplot2" )
+
+# encontrar todos los logs.gz
+allfiles <- list.files( path = localdir,
+                        pattern = "monitor-cluster-log.tsv.gz",
+                        recursive = TRUE,
+                        full.names = TRUE  ) %>% 
+  as.data.frame( ) %>% 
+  rename( path = 1 ) %>% 
+  mutate( filename = basename( path ) ) %>% 
+  arrange( filename ) %>% 
+  tail( n = 1 ) %>% 
+  pull( path )
+
+# crear una funcion para agregar fecha y tiempo
+read_data.f <- function( the_file ){
+  
+  name_parts <- basename( the_file ) %>% strsplit( split = "_" ) %>% unlist( )
+  
+  thedate <- name_parts[1]
+  thetime <- name_parts[2] %>% str_replace( string = ., pattern = "-", replacement = ":" )
+  
+  # read the file
+  vroom( file = the_file ) %>% 
+    mutate( fecha = ymd( thedate ),
+            hora = hm( thetime ) )
+  
+}
+
+# read the data
+all_logs <- allfiles %>% 
+  map_df( ~ read_data.f( . ) )
+
+# limpiar la data
+los_usuarios <- all_logs %>% 
+  filter( test == "users" ) %>% 
+  filter( !is.na( fecha ) )
+
+# get max day and hour
+maxes <- los_usuarios %>% 
+  select( fecha, hora ) %>% 
+  arrange( fecha, hora ) %>% 
+  tail( n = 1 )
+
+# definimos un dataset para el periodo de 6 meses
+periodo <- los_usuarios %>% 
+  filter( fecha == maxes$fecha, hora == maxes$hora ) %>% 
+  select( -test, -user, -fecha, -hora ) %>% 
+  unique( ) %>% 
+  separate( col = value,
+            into = paste0( "c", 1:7),
+            sep = ":",
+            remove = TRUE ) %>% 
+  select( -c2, -c4, -c5, -c6 ) %>% 
+  rename( user = c1,
+          UID = c3,
+          shell = c7 ) %>% 
+  mutate( registered_and_hostname = paste( registered_name, hostname, sep = "_" ) ) %>% 
+  select( -registered_name, -hostname )
+
+```
+
+## Periodo reportado:
+```{r, comment = FALSE, echo = FALSE, warning = FALSE, message = FALSE}
+
+maxes %>% 
+  kable( )
+
+```
+
+# USUARIOS:
+
+```{r, comment = FALSE, echo = FALSE, warning = FALSE, message = FALSE}
+
+# preparar eje x
+xorder <- all_logs %>% 
+  filter( fecha == maxes$fecha, hora == maxes$hora, test == "ssh_connection" ) %>% 
+  unique( ) %>% 
+  filter( !is.na( value ) ) %>% 
+  mutate( registered_and_hostname = paste( registered_name, hostname, sep = "_" ) ) %>% 
+  pull( registered_and_hostname )
+
+# create a function to test if a vector contains only 1 unique value
+test_unique.f <- function( the_vector ) {
+  
+  # calculate number of unique values
+  vlen <- the_vector %>% unique( ) %>% length( )
+  
+  # test number of values
+  ifelse( test = vlen == 1,
+          yes = "UNIQUE",
+          no = "ERROR" )
+}
+
+# tag users according to number of unique UID
+periodo <- periodo %>% 
+  group_by( user ) %>% 
+  mutate( uniqueUID = test_unique.f( the_vector = UID ) ) %>% 
+  ungroup( )
+
+```
+
+```{r, comment = FALSE, echo = FALSE, warning = FALSE, message = FALSE, fig.width = 10, fig.height = 10, dpi =  600 }
+user_heatmap.f <- function( the_data, the_subtitle ) {
+  
+  # preparar eje y
+  yorder <- the_data %>% 
+    group_by( user, uniqueUID ) %>% 
+    summarise( nservers = n( ),
+               mean_value = mean( as.numeric( UID ) ) ) %>% 
+    ungroup( ) %>% 
+    arrange( uniqueUID, -mean_value, -nservers )
+  
+  # do plot
+  ggplot( data = the_data,
+          mapping = aes( x = registered_and_hostname,
+                         y = user,
+                         label = UID,
+                         fill = uniqueUID ) ) +
+    geom_tile( alpha = 0.3, color = "gray50" ) +
+    geom_text( size = 2 ) +
+    scale_x_discrete( limits = rev( xorder ), position = "top" ) + 
+    scale_y_discrete( limits = rev( yorder$user ) ) + 
+    labs( title = "Concordancia de usuarios entre nodos",
+          subtitle = the_subtitle ) +
+    theme_light( ) +
+    theme( panel.grid = element_blank( ),
+           axis.text.y = element_text( size = 5 ) )
+}
+```
+
+```{r, comment = FALSE, echo = FALSE, warning = FALSE, message = FALSE, fig.width = 10, fig.height = 10, dpi =  600 }
+user_heatmap.f( the_data = periodo, the_subtitle = "Todos los usuarios" )
+```
+
+```{r, comment = FALSE, echo = FALSE, warning = FALSE, message = FALSE, fig.width = 10, fig.height = 10, dpi =  600 }
+user_heatmap.f( the_data = filter( periodo, uniqueUID == "ERROR" ),
+                the_subtitle = "Solo errores" )
+```
+
+# GRUPOS:
+
+```{r, comment = FALSE, echo = FALSE, warning = FALSE, message = FALSE}
+# limpiar la data
+los_grupos <- all_logs %>% 
+  filter( test == "groups" ) %>% 
+  filter( !is.na( fecha ) )
+
+# get max day and hour
+maxes <- los_grupos %>% 
+  select( fecha, hora ) %>% 
+  arrange( fecha, hora ) %>% 
+  tail( n = 1 )
+
+# definimos un dataset para el periodo de 6 meses
+periodo_grupos <- los_grupos %>% 
+  filter( fecha == maxes$fecha, hora == maxes$hora ) %>% 
+  select( -test, -user, -fecha, -hora ) %>% 
+  unique( ) %>% 
+  separate( col = value,
+            into = paste0( "c", 1:4),
+            sep = ":",
+            remove = TRUE ) %>% 
+  select( -c2 ) %>% 
+  rename( group = c1,
+          GID = c3,
+          members = c4 ) %>% 
+  mutate( registered_and_hostname = paste( registered_name, hostname, sep = "_" ) ) %>% 
+  select( -registered_name, -hostname )
+
+```
+
+```{r, comment = FALSE, echo = FALSE, warning = FALSE, message = FALSE}
+
+# tag users according to number of unique UID
+periodo_grupos <- periodo_grupos %>% 
+  group_by( group ) %>% 
+  mutate( uniqueGID = test_unique.f( the_vector = GID ) ) %>% 
+  ungroup( )
+
+```
+
+```{r, comment = FALSE, echo = FALSE, warning = FALSE, message = FALSE, fig.width = 10, fig.height = 10, dpi =  600 }
+group_heatmap.f <- function( the_data, the_subtitle ) {
+  
+  # preparar eje y
+  yorder <- the_data %>% 
+    group_by( group, uniqueGID ) %>% 
+    summarise( nservers = n( ),
+               mean_value = mean( as.numeric( GID ) ) ) %>% 
+    ungroup( ) %>% 
+    arrange( uniqueGID, -mean_value, -nservers )
+  
+  # do plot
+  ggplot( data = the_data,
+          mapping = aes( x = registered_and_hostname,
+                         y = group,
+                         label = GID,
+                         fill = uniqueGID ) ) +
+    geom_tile( alpha = 0.3, color = "gray50" ) +
+    geom_text( size = 2 ) +
+    scale_x_discrete( limits = rev( xorder ), position = "top" ) + 
+    scale_y_discrete( limits = rev( yorder$group ) ) + 
+    labs( title = "Concordancia de usuarios entre nodos",
+          subtitle = the_subtitle ) +
+    theme_light( ) +
+    theme( panel.grid = element_blank( ),
+           axis.text.y = element_text( size = 5 ) )
+}
+```
+
+```{r, comment = FALSE, echo = FALSE, warning = FALSE, message = FALSE, fig.width = 10, fig.height = 10, dpi =  600 }
+group_heatmap.f( the_data = periodo_grupos, the_subtitle = "Todos los usuarios" )
+```
+
+```{r, comment = FALSE, echo = FALSE, warning = FALSE, message = FALSE, fig.width = 10, fig.height = 10, dpi =  600 }
+group_heatmap.f( the_data = filter( periodo_grupos, uniqueGID == "ERROR" ),
+                the_subtitle = "Solo errores" )
+```
+
+```
+
+### Fin del reporte: `r format(Sys.time(), "%A %d %B %Y")`
