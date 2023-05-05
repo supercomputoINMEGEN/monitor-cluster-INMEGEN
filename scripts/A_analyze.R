@@ -118,6 +118,18 @@ online_test.p <- ggplot( data = online_test,
 saveRDS( object = online_test.p,
          file = "online_test.rds" )
 
+# save the dataframe for dynamic plotting
+online_test %>% 
+  mutate( the_subtitle = the_subtitle,
+          the_caption = the_caption ) %>% 
+  write.table( x = .,
+               file = "online_test.tsv",
+               append = FALSE,
+               quote = FALSE,
+               sep = "\t",
+               row.names = FALSE,
+               col.names = TRUE )
+
 ### plot number_processes ====
 number_of_process <- the_data %>% 
   filter( test == "number_processes" ) %>% 

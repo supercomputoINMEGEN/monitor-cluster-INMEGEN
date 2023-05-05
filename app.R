@@ -1,6 +1,13 @@
 ## app.R ##
 library(shinydashboard)
 
+library("ggplot2")
+library("vroom")
+library("dplyr")
+
+# source all the functions
+source( file = "scripts/shiny-scripts.R" )
+
 ui <- dashboardPage( skin = "purple",
                      dashboardHeader( title = "Cluster Inmegen" ),
                      dashboardSidebar(
@@ -37,9 +44,8 @@ ui <- dashboardPage( skin = "purple",
                          tabItem( tabName = "nodes",
                                   # Boxes need to be put in a row (or column)
                                   fluidRow(
-                                    box( plotOutput( "nodos_recursos", height = 500 ) ),
-                                    box( plotOutput( "top3disks", height = 500 ) )
-                                    # box( plotOutput( "slots_disponibilidad", height = 250 ) )
+                                    # box( plotOutput( "nodos_recursos", height = 500 ) ),
+                                    # box( plotOutput( "top3disks", height = 500 ) )
                                   ),
                                   fluidRow(
                                     box( plotOutput( "nodos_online", height = 500 ) )
@@ -48,8 +54,8 @@ ui <- dashboardPage( skin = "purple",
                          ), # Este cierra la pestania mainboard
                          tabItem( tabName = "users",
                                   fluidRow(
-                                    box( plotOutput( "vieja_conexion", height = 500 ) ),
-                                    box( plotOutput( "numero_procesos", height = 1000 ) )
+                                    # box( plotOutput( "vieja_conexion", height = 500 ) ),
+                                    # box( plotOutput( "numero_procesos", height = 1000 ) )
                                   )
                          ),
                          tabItem( tabName = "rules",
@@ -88,24 +94,26 @@ ui <- dashboardPage( skin = "purple",
 
 server <- function(input, output) {
   
-  output$nodos_online <- renderPlot(
-    readRDS( file = "monitor-results/cluster_monitor-results/A-analyzeR/online_test.rds" )
-  )
-  output$vieja_conexion <- renderPlot(
-    readRDS( file = "monitor-results/cluster_monitor-results/A-analyzeR/oldest_connection.rds" )
-  )
-  output$numero_procesos <- renderPlot(
-    readRDS( file = "monitor-results/cluster_monitor-results/A-analyzeR/number_of_process.rds" )
-  )
-  # output$slots_disponibilidad <- renderPlot(
-  #   readRDS( file = "logs/imagen_disponibilidad.rds" )
+  # output$nodos_online <- renderPlot(
+  #   readRDS( file = "monitor-results/cluster_monitor-results/A-analyzeR/online_test.rds" )
   # )
-  output$nodos_recursos <- renderPlot(
-    readRDS( file = "monitor-results/cluster_monitor-results/A-analyzeR/all_resources.rds" )
-  )
-  output$top3disks <- renderPlot(
-    readRDS( file = "monitor-results/cluster_monitor-results/A-analyzeR/top3disks.rds" )
-  )
+  ### ONLINE NODES PLOT 
+  output$nodos_online <- renderPlot( online_test.f( the_file = "logs/online_test.tsv" ) )
+
+  ### ----
+  # output$vieja_conexion <- renderPlot(
+  #   readRDS( file = "monitor-results/cluster_monitor-results/A-analyzeR/oldest_connection.rds" )
+  # )
+  # output$numero_procesos <- renderPlot(
+  #   readRDS( file = "monitor-results/cluster_monitor-results/A-analyzeR/number_of_process.rds" )
+  # )
+  # output$nodos_recursos <- renderPlot(
+  #   readRDS( file = "monitor-results/cluster_monitor-results/A-analyzeR/all_resources.rds" )
+  # )
+  # output$top3disks <- renderPlot(
+  #   readRDS( file = "monitor-results/cluster_monitor-results/A-analyzeR/top3disks.rds" )
+  # )
+  
 }
 
 shinyApp(ui, server)
