@@ -7,9 +7,12 @@ ui <- dashboardPage( skin = "purple",
                        # agregamos menu
                        sidebarMenu(
                          # Use icons from https://getbootstrap.com/docs/3.4/components/#glyphicons
-                         menuItem( "Principal",
-                                   tabName = "mainboard",
+                         menuItem( "Recursos por nodos",
+                                   tabName = "nodes",
                                    icon = icon( "tasks", lib = "glyphicon"  ) ),
+                         menuItem( "Usuarios",
+                                   tabName = "users",
+                                   icon = icon( "user", lib = "glyphicon" ) ),
                          menuItem( "Reglamento",
                                    tabName = "rules",
                                    icon = icon( "book", lib = "glyphicon" ) ),
@@ -31,23 +34,24 @@ ui <- dashboardPage( skin = "purple",
                      dashboardBody(
                        tabItems(
                          # First tab content
-                         tabItem( tabName = "mainboard",
+                         tabItem( tabName = "nodes",
                                   # Boxes need to be put in a row (or column)
                                   fluidRow(
                                     box( plotOutput( "nodos_recursos", height = 500 ) ),
-                                    box( plotOutput( "vieja_conexion", height = 500 ) )
+                                    box( plotOutput( "top3disks", height = 500 ) )
                                     # box( plotOutput( "slots_disponibilidad", height = 250 ) )
                                   ),
                                   fluidRow(
-                                    box( plotOutput( "nodos_online", height = 500 ) ),
-                                    box( plotOutput( "top3disks", height = 500 ) )
-                                    
-                                  ),
-                                  fluidRow(
-                                    box( plotOutput( "numero_procesos", height = 1000 ) )
+                                    box( plotOutput( "nodos_online", height = 500 ) )
                                     
                                   )
                          ), # Este cierra la pestania mainboard
+                         tabItem( tabName = "users",
+                                  fluidRow(
+                                    box( plotOutput( "vieja_conexion", height = 500 ) ),
+                                    box( plotOutput( "numero_procesos", height = 1000 ) )
+                                  )
+                         ),
                          tabItem( tabName = "rules",
                                   tags$iframe( style = "height:800px; width:100%; scrolling = yes",
                                                src = "reglamentoclusterinmegen.pdf" )
