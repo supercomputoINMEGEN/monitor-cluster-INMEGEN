@@ -93,10 +93,7 @@ ui <- dashboardPage( skin = "purple",
 )
 
 server <- function(input, output) {
-  
-  # output$nodos_online <- renderPlot(
-  #   readRDS( file = "monitor-results/cluster_monitor-results/A-analyzeR/online_test.rds" )
-  # )
+
   ### ONLINE NODES PLOT 
   output$nodos_online <- renderPlot( online_test.f( the_file = "logs/online_test.tsv" ) )
 

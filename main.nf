@@ -142,7 +142,7 @@ scripts_topdisk           = Channel.fromPath( "./scripts/08_top3disks.sh" )
 scripts_maxtemp           = Channel.fromPath( "./scripts/09_maxtemp.sh" )
 scripts_getusers          = Channel.fromPath( "./scripts/10_getusers.sh" )
 scripts_getgroups         = Channel.fromPath( "./scripts/11_getgroups.sh" )
-scripts_analyzer          = Channel.fromPath( "./scripts/A_analyze.R" )
+scripts_analyzer          = Channel.fromPath( "./scripts/*.R" ).toList()
 scripts_rmd_reports       = Channel.fromPath( "./scripts/B_*" ).toList()
 
 /*
