@@ -14,7 +14,7 @@ include { ANALYZER }    from './main.nf'
 all_groups= Channel.fromPath( "test/data/allgroups.tmp" )
 
 /* declare scripts channel for testing */
-scripts_analyzer = Channel.fromPath( "scripts/A_analyze.R" )
+scripts_analyzer = Channel.fromPath( "scripts/*.R" ).toList( )
 
 workflow {
   ANALYZER ( all_groups, scripts_analyzer )

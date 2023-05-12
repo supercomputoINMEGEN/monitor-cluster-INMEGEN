@@ -11,8 +11,7 @@ process analyzer {
         path SCRIPT
 
     output:
-        path "*.rds", emit: analyzer_results
-        path "*.tsv*"
+        path "*.tsv*", emit: analyzer_results
 
     script:
     """
