@@ -2,6 +2,9 @@
 # May 4th 2023
 # This script must be sourced to the main app.R to enable dynami plots
 
+library( "stringr" )
+library( "scales" )
+
 # Parametrize
 max_days_for_connection <- 14            # max days to flag an old connection as warning
 max_fracc_for_waring_on_top3disk <- 0.5  # mas percentage (as fraction 0.5 = 50%) to mark as warning on disk usage
@@ -198,11 +201,11 @@ top3disks.f <- function( the_data ){
   
   ggplot( mapping = aes( x = disk,
                          y = perc ) ) +
-    geom_col( data = filter( reorder.f( top3disks), perc < max_fracc_for_waring_on_top3disk ),
+    geom_col( data = filter( reorder.f( topdisk), perc < max_fracc_for_waring_on_top3disk ),
               width = 0.1, fill = "gray50" ) +
-    geom_col( data = filter( reorder.f( top3disks ), perc >= max_fracc_for_waring_on_top3disk ),
+    geom_col( data = filter( reorder.f( topdisk ), perc >= max_fracc_for_waring_on_top3disk ),
               width = 0.1, fill = "tomato" ) +
-    geom_text( data = filter( reorder.f( top3disks ), perc >= max_fracc_for_waring_on_top3disk ),
+    geom_text( data = filter( reorder.f( topdisk ), perc >= max_fracc_for_waring_on_top3disk ),
                mapping = aes( label = disk ),
                angle = 90, nudge_y = 0.1 ) +
     geom_hline( yintercept = max_fracc_for_waring_on_top3disk,

@@ -44,8 +44,11 @@ ui <- dashboardPage( skin = "purple",
                          tabItem( tabName = "nodes",
                                   # Boxes need to be put in a row (or column)
                                   fluidRow(
-                                    # box( plotOutput( "nodos_recursos", height = 500 ) ),
-                                    # box( plotOutput( "top3disks", height = 500 ) )
+                                    box( plotOutput( "nodos_recursos", width = 900, height = 900 ) )
+                                  ),
+                                  fluidRow(
+                                    box( plotOutput( "top3disks", width = 900, height = 900 ) )
+                                    
                                   ),
                                   fluidRow(
                                     box( plotOutput( "nodos_online", height = 500 ) )
@@ -54,8 +57,8 @@ ui <- dashboardPage( skin = "purple",
                          ), # Este cierra la pestania mainboard
                          tabItem( tabName = "users",
                                   fluidRow(
-                                    # box( plotOutput( "vieja_conexion", height = 500 ) ),
-                                    # box( plotOutput( "numero_procesos", height = 1000 ) )
+                                    box( plotOutput( "vieja_conexion", height = 500 ) ),
+                                    box( plotOutput( "numero_procesos", height = 1000 ) )
                                   )
                          ),
                          tabItem( tabName = "rules",
@@ -95,21 +98,15 @@ ui <- dashboardPage( skin = "purple",
 server <- function(input, output) {
 
   ### ONLINE NODES PLOT 
-  output$nodos_online <- renderPlot( online_test.f( the_file = "logs/online_test.tsv" ) )
+  output$nodos_online    <- renderPlot( online_test.f( the_file = "logs/online_test.tsv" ) )
 
   ### ----
-  # output$vieja_conexion <- renderPlot(
-  #   readRDS( file = "monitor-results/cluster_monitor-results/A-analyzeR/oldest_connection.rds" )
-  # )
-  # output$numero_procesos <- renderPlot(
-  #   readRDS( file = "monitor-results/cluster_monitor-results/A-analyzeR/number_of_process.rds" )
-  # )
-  # output$nodos_recursos <- renderPlot(
-  #   readRDS( file = "monitor-results/cluster_monitor-results/A-analyzeR/all_resources.rds" )
-  # )
-  # output$top3disks <- renderPlot(
-  #   readRDS( file = "monitor-results/cluster_monitor-results/A-analyzeR/top3disks.rds" )
-  # )
+  output$vieja_conexion  <- renderPlot( oldest_connection.f( the_data = "logs/oldest_connection.tsv" ) )
+  output$numero_procesos <- renderPlot( number_of_process.f( the_number_of_process = "logs/number_of_process.tsv",
+                                                             the_percent_process = "logs/percent_process.tsv",
+                                                             the_ordered_process =  "logs/ordered_process.tsv" ) )
+  output$nodos_recursos  <- renderPlot( all_resources.f( the_data = "logs/all_resources.tsv" ) )
+  output$top3disks <- renderPlot( top3disks.f( the_data = "logs/disk.tsv" ) )
   
 }
 
