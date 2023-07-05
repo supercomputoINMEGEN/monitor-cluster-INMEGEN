@@ -1,3 +1,5 @@
+## app.R ##
+library( "shinydashboard" )
 library("shiny")
 library("DT")
 library("vroom")
@@ -5,17 +7,40 @@ library("ggplot2")
 library("tidyr")
 library("dplyr")
 
-# Define UI
-ui <- fluidPage(
-  titlePanel("Usuarios Dashboard"),
-  sidebarLayout(
-    sidebarPanel(
-      # Add any sidebar inputs if needed
-    ),
-    mainPanel(
-      selectInput("user_select", "Select User", choices = NULL),
-      plotOutput("heatmap"),
-      dataTableOutput("filtered_data_table")
+ui <- dashboardPage(
+  dashboardHeader(title = "Cluster Inmegen - Administracion"),
+  
+  # The sidebar menus
+  dashboardSidebar(
+    sidebarMenu(
+      menuItem( text = "Usuarios",
+                tabName = "users",
+                icon = icon( "user", lib = "glyphicon" ) )
+    ) # Fin del sidebarMenu
+  ), # Fin y coma del dashboardSidebar
+  
+  # The Body to show in page
+  dashboardBody(
+    
+    # Dividido por categoria del sidebar menu
+    tabItems(
+      
+      # First tab conten; Usuarios
+      tabItem(tabName = "users",
+              fluidRow(
+                box(
+                  title = "Buscar user",
+                  selectInput( inputId = "user_select",
+                               label = "Seleccionar",
+                               choices = NULL ), width = 3
+                ),
+                box(
+                  title = "Propagacion del Usuario",
+                  plotOutput("heatmap"),
+                  width = 10
+                )
+              ) # end fluidrow
+      )
     )
   )
 )
@@ -68,7 +93,7 @@ server <- function(input, output, session) {
             x = "Registered and Hostname",
             y = "User",
             fill = "UID test" ) +
-      theme_minimal() +
+      theme_minimal( base_size = 15 ) +
       theme( axis.text.x = element_text( angle = 90, hjust = 0.5 ) )
   })
   
@@ -79,6 +104,4 @@ server <- function(input, output, session) {
     datatable(filtered_data)
   })
 }
-
-# Run the application
-shinyApp(ui = ui, server = server)
+shinyApp(ui, server)
