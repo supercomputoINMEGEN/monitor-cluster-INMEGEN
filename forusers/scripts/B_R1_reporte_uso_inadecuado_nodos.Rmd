@@ -1,0 +1,138 @@
+---
+title: "Reporte Semestral de uso inadecuado de nodos de computo"
+author: Jefatura de Supercomputo - Subdireccion de Bioinformatica Inmegen
+date: fecha de reporte "`r format(Sys.time(), "%A %d %B %Y %X ")`"
+output: pdf_document
+---
+```{r, comment = FALSE, echo = FALSE, warning = FALSE, message = FALSE}
+# cargar libs
+library( "pacman" )
+
+# cargar paquetes
+p_load( "vroom",
+        "knitr",
+        "purrr",
+        "dplyr",
+        "tidyr",
+        "stringr",
+        "lubridate",
+        "ggplot2" )
+
+# encontrar todos los logs.gz
+allfiles <- list.files( path = localdir,
+                       pattern = "monitor-cluster-log.tsv.gz",
+                       recursive = TRUE,
+                       full.names = TRUE  )
+
+# crear una funcion para agregar fecha y tiempo
+read_data.f <- function( the_file ){
+  
+  name_parts <- basename( the_file ) %>% strsplit( split = "_" ) %>% unlist( )
+  
+  thedate <- name_parts[1]
+  thetime <- name_parts[2] %>% str_replace( string = ., pattern = "-", replacement = ":" )
+  
+  # read the file
+  vroom( file = the_file ) %>% 
+    mutate( fecha = ymd( thedate ),
+            hora = hm( thetime ) )
+  
+}
+
+# read the data
+all_logs <- allfiles %>% 
+  map_df( ~ read_data.f( . ) )
+
+# limpiar la data
+procesos_por_usuario <- all_logs %>% 
+  filter( test == "number_processes" ) %>% 
+  mutate( value = as.numeric( value ) )
+
+# definir el intervalo
+meses <- 6
+
+# mindate <- min( base$date )
+mindate <- max( procesos_por_usuario$fecha, na.rm = TRUE ) - months( meses ) # usar para mostrar siempre los ultimos seis meses
+
+maxdate <- max( procesos_por_usuario$fecha, na.rm = TRUE )
+
+# crear fecha humanas
+minfecha <- format( mindate,
+                    "%A %d %B %Y")
+maxfecha <- format( maxdate,
+                    "%A %d %B %Y")
+
+# definir limite de procesos
+maximo_procesos <- 50
+
+# definimos un dataset para el periodo de 6 meses
+periodo <- procesos_por_usuario %>% 
+  filter( fecha > mindate )
+
+```
+
+## Periodo reportado: del `r minfecha` al `r maxfecha`
+
+# Introduccion.
+Para poder discutir y mejorar el funcionamiento de los servicios de **computo cientifico provistos por el Cluster Inmegen**, este documento describe el comportamiento de los usuarios, en cuanto al numero de procesos ejecutados directamente en los nodos de computo (sin sistema de encolador).
+
+## El numero maximo de procesos ejecutados directamente es de: `r maximo_procesos`  (definido por la jefatura de supercomputo).
+Los procesos no deberian aparecer ejecutados directo por el usuario, sino por el encolador. (Esto debe validarse de acuerdo al sistema encolador; en algunos casos puede ser explicable que el numero de procesos incremente).  
+
+El nodo Central (login, o master) no debe de mostrar incrementos en el numero de procesos por usuario, dado que no forma parte de la estructura de nodos que ejecutan las tareas.
+
+### A continuacion se muestra el uso de los nodos de computo, tomando en cuenta a todos los usuarios activos de Cluster Inmegen, durante el periodo senalado al inicio de este reporte.
+
+En color rojo se resaltan los momentos en que ocurrio un uso inadecuado de los nodos de computo, de acuerdo al numero de procesos ejecutados directamente en ellos.
+
+```{r, comment = FALSE, echo = FALSE, warning = FALSE, message = FALSE}
+# calculamos el promedio por dia, por nodo, por usuario
+promedios <- periodo %>% 
+  select( -hora, -test ) %>% 
+  group_by( subsystem, registered_name,
+            user, hostname, fecha ) %>% 
+  summarise( promedio_procesos = mean( value ) ) %>% 
+  ungroup( )
+
+# encontramos los datos que se salen del limite permitido
+enfalta <- filter( promedios, promedio_procesos > maximo_procesos )
+
+# creamos el plot sobre uso de procesos
+ggplot( data = promedios,
+        mapping = aes( x = fecha,
+                       y = promedio_procesos,
+                       group = user ) ) +
+  geom_line( color = "gray60", size = 0.2 ) +
+  geom_point( data = enfalta,
+             color = "tomato", size = 0.5 ) +
+  geom_hline( yintercept = maximo_procesos,
+              color = "tomato",
+              lty = "dashed", alpha = 0.5 ) +
+  # scale_y_continuous( limits = c( 0, floor( max( periodo$value ) ) ) ) +
+  scale_x_date( limits = c( mindate, maxdate ),
+                breaks = seq( from = mindate,
+                              to = maxdate,
+                              by = "month" ),
+                date_labels = "%b %Y" ) +
+  labs( x = "fecha",
+        y = "# procesos al dia\n(promedio)" ) +
+  theme_light( ) +
+  theme( strip.background = element_rect( fill = "white", color = "black" ),
+         strip.text = element_text( color = "black" ),
+         panel.grid.minor.y = element_blank( ),
+         axis.text.x = element_text( angle = 90, hjust = 0.5, vjust = 0.5 ) ) +
+  facet_wrap( ~ subsystem + registered_name + hostname )
+
+```
+
+# Reporte de incidencias de exceso de procesos ejecutados directamente en nodos
+```{r, comment = FALSE, echo = FALSE, warning = FALSE, message = FALSE}
+# imprimimos tabla
+enfalta %>% 
+  arrange( subsystem, fecha, -promedio_procesos ) %>% 
+  select( subsystem, registered_name, hostname, fecha, user, promedio_procesos ) %>% 
+  kable( x = . )
+
+```
+
+### Fin del reporte: `r format(Sys.time(), "%A %d %B %Y")`

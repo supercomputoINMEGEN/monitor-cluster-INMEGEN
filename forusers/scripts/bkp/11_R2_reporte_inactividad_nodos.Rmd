@@ -1,0 +1,142 @@
+---
+title: "Reporte Semestral de inactividad de nodos de computo"
+author: Jefatura de Supercomputo - Subdireccion de Bioinformatica Inmegen
+date: fecha de reporte "`r format(Sys.time(), "%A %d %B %Y %X ")`"
+output: pdf_document
+---
+```{r, comment = FALSE, echo = FALSE, warning = FALSE, message = FALSE}
+# cargar libs
+library( "pacman" )
+
+# cargar paquetes
+p_load( "vroom",
+        "knitr",
+        "dplyr",
+        "tidyr",
+        "scales",
+        "lubridate",
+        "ggplot2" )
+
+# for debug only
+# ifile <- "../logs/nodos_online.log.gz"
+
+# leer la data
+actividad_nodos <- vroom( ifile,                  # asegurate de que el invocador pase la asignacion de ifile <- "logs/..." antes de llamar al render
+                          col_names = FALSE )
+
+# limpiar la data
+limpiada <- actividad_nodos %>% 
+  rename( timestamp = 1,
+          nodo = 2,
+          ip = 3,
+          status = 4 ) %>% 
+  separate( col =  timestamp,
+            into = c( "dia", "fecha", "hora" ),
+            sep = "_" ) %>% 
+  mutate( fecha2 = dmy(fecha),
+          hora2 = hm(hora),
+          fechahora = fecha2 + hora2 )
+
+# definir el intervalo
+meses <- 6
+
+# mindate <- min( base$date )
+mindate <- max( limpiada$fecha2, na.rm = TRUE ) - months( meses ) # usar para mostrar siempre los ultimos seis meses
+maxdate <- max( limpiada$fecha2, na.rm = TRUE )
+
+# crear fecha humanas
+minfecha <- format( mindate,
+                    "%A %d %B %Y")
+
+maxfecha <- format( maxdate,
+                    "%A %d %B %Y")
+
+# definimos un dataset para el periodo de 6 meses
+periodo <- limpiada %>% 
+  filter( fecha2 > mindate )
+
+```
+## Periodo reportado: del `r minfecha` al `r maxfecha`
+
+# Introduccion.
+Para poder discutir y mejorar el funcionamiento de los servicios de **computo cientifico provistos por el Cluster Inmegen**, este documento describe el comportamiento de los Nodos de Computo, en cuanto al tiempo que pasaron en linea o fuera de servicio(es decir, no se pudo hacer conexion a ellos por ssh).
+
+### A continuacion se muestra la linea de tiempo con el estado de actividad de los nodos en cluster Inmegen, durante el periodo senalado al inicio de este reporte.
+
+En color rojo se resaltan los momentos en que ocurrio una desconexion de nodo de computo. Cabe senalar que esto se puede deber a ventanas programadas de mantenimiento, o a errores de funcionamiento. De cualquier forma es un indicador de la disponibilidad del servicio prestado por Cluster Inmegen.  
+
+```{r, comment = FALSE, echo = FALSE, warning = FALSE, message = FALSE}
+
+ggplot( data = periodo,
+        mapping = aes( x = fechahora,
+                       y = status,
+                       color = status ) ) +
+  geom_step( mapping = aes( group = nodo ) ) +
+  geom_point( data = filter( periodo, status == "FALLA_NO_da_ping" ),
+              size = 0.5, shape = 4 ) +
+  scale_x_datetime( 
+    limits = c( min( periodo$fechahora ) , max( periodo$fechahora ) ),
+                    breaks = seq( from = min( periodo$fechahora ),
+                                  to = max( periodo$fechahora ),
+                                  by = "week" ),
+                    date_labels = "%d %b %Y" ) +
+  scale_y_discrete( limits = c( "FALLA_NO_da_ping", "En_Linea" ),
+                    labels = c( "Offline", "Online" ) ) +
+  scale_color_manual( values = c( "En_Linea" = "skyblue", "FALLA_NO_da_ping" = "tomato" ) ) +
+  labs( title = "Registro de actividad en nodos Cluster Inmegen" ) +
+  facet_wrap( ~ nodo ) +
+  theme_light( base_size = 13 ) +
+  theme( strip.background = element_rect( colour = "black", fill = "white" ),
+         strip.text = element_text( face = "bold", color = "black" ),
+         legend.position = "none",
+         panel.grid.major.y = element_blank( ),
+         axis.text.x = element_text( angle = 90, hjust = 0.5, vjust = 0.5 ),
+         axis.title.x = element_blank( ) )
+
+```
+
+# Tiempo Online  
+
+A continuacion se muestra el resumen de tiempo en que cad nodo estuvo en linea durante el periodo evaluado.
+
+```{r, comment = FALSE, echo = FALSE, warning = FALSE, message = FALSE}
+periodo %>% 
+  select( nodo, status ) %>% 
+  group_by( nodo, status ) %>% 
+  summarise( ticks = n( ) ) %>% 
+  mutate( freq = ticks / sum( ticks ),
+          status = factor( x = status, levels = c( "FALLA_NO_da_ping", "En_Linea" ) ) ) %>% 
+  ungroup( ) %>% 
+  ggplot( data = .,
+          mapping = aes( x = nodo,
+                         y = freq,
+                         fill = status ) ) +
+  geom_col( color = "black" ) +
+  scale_y_continuous( limits = c( 0, 1 ),
+                      expand = c( 0, 0 ),
+                      labels = percent ) +
+  scale_fill_manual( values = c( "En_Linea" = "skyblue", "FALLA_NO_da_ping" = "tomato" ),
+                     limits = c( "FALLA_NO_da_ping", "En_Linea" ),
+                     labels = c( "OFFline", "ONline" ) ) +
+  labs( title = "Disponibilidad de nodos de computo",
+        subtitle = paste( "Periodo", minfecha, "al", maxfecha ),
+        x = "Nodo",
+        y = "Tiempo" ) +
+  theme_classic( base_size = 15 ) +
+  theme( plot.subtitle = element_text( size = 10 ) )
+
+```
+
+# Reporte de incidencias de offline
+```{r, comment = FALSE, echo = FALSE, warning = FALSE, message = FALSE}
+
+# imprimimos tabla
+periodo %>%
+  filter( status == "FALLA_NO_da_ping" ) %>% 
+  arrange( fechahora ) %>% 
+  select( -fecha2, -hora2, -fechahora ) %>% 
+  kable( x = . )
+
+```
+
+### Fin del reporte: `r format(Sys.time(), "%A %d %B %Y")`

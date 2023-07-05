@@ -1,0 +1,19 @@
+subsystem	registered_name	value	hostname	registered_and_hostname	the_subtitle	the_caption
+OLD_CLUSTER	corellia	ONLINE	corellia	corellia(corellia)	Ultima revision jue 2023-05-11 18:13	Jefatura de Supercomputo - INMEGEN
+OLD_CLUSTER	central	ONLINE	central	central(central)	Ultima revision jue 2023-05-11 18:13	Jefatura de Supercomputo - INMEGEN
+OLD_CLUSTER	notron	ONLINE	notron	notron(notron)	Ultima revision jue 2023-05-11 18:13	Jefatura de Supercomputo - INMEGEN
+OLD_CLUSTER	indra	ONLINE	indra	indra(indra)	Ultima revision jue 2023-05-11 18:13	Jefatura de Supercomputo - INMEGEN
+OLD_CLUSTER	drona	ONLINE	drona	drona(drona)	Ultima revision jue 2023-05-11 18:13	Jefatura de Supercomputo - INMEGEN
+FENIX	fx-lg	ONLINE	fx-lg	fx-lg(fx-lg)	Ultima revision jue 2023-05-11 18:13	Jefatura de Supercomputo - INMEGEN
+FENIX	fx-gpu	ONLINE	fx-gpu	fx-gpu(fx-gpu)	Ultima revision jue 2023-05-11 18:13	Jefatura de Supercomputo - INMEGEN
+FENIX	fx-ld1	ONLINE	fx-ld1	fx-ld1(fx-ld1)	Ultima revision jue 2023-05-11 18:13	Jefatura de Supercomputo - INMEGEN
+FENIX	fx-ld2	ONLINE	fx-ld2	fx-ld2(fx-ld2)	Ultima revision jue 2023-05-11 18:13	Jefatura de Supercomputo - INMEGEN
+FENIX	fx-hd	ONLINE	fx-hd	fx-hd(fx-hd)	Ultima revision jue 2023-05-11 18:13	Jefatura de Supercomputo - INMEGEN
+FENIX	fx-st	ONLINE	storage	fx-st(storage)	Ultima revision jue 2023-05-11 18:13	Jefatura de Supercomputo - INMEGEN
+PEGASO	pg-lg	ONLINE	pg-lg	pg-lg(pg-lg)	Ultima revision jue 2023-05-11 18:13	Jefatura de Supercomputo - INMEGEN
+PEGASO	pg-gpu	ONLINE	pg-gpu	pg-gpu(pg-gpu)	Ultima revision jue 2023-05-11 18:13	Jefatura de Supercomputo - INMEGEN
+PEGASO	pg-ld1	ONLINE	pg-ld1	pg-ld1(pg-ld1)	Ultima revision jue 2023-05-11 18:13	Jefatura de Supercomputo - INMEGEN
+PEGASO	pg-ld2	ONLINE	pg-ld2	pg-ld2(pg-ld2)	Ultima revision jue 2023-05-11 18:13	Jefatura de Supercomputo - INMEGEN
+PEGASO	pg-hd	ONLINE	pg-hd	pg-hd(pg-hd)	Ultima revision jue 2023-05-11 18:13	Jefatura de Supercomputo - INMEGEN
+PEGASO	pg-storage-ha2	ONLINE	pg-storage-ha2	pg-storage-ha2(pg-storage-ha2)	Ultima revision jue 2023-05-11 18:13	Jefatura de Supercomputo - INMEGEN
+PEGASO	pg-storage-ha1	ONLINE	pg-storage-ha1	pg-storage-ha1(pg-storage-ha1)	Ultima revision jue 2023-05-11 18:13	Jefatura de Supercomputo - INMEGEN

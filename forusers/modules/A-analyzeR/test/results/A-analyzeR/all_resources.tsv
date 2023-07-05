@@ -1,0 +1,62 @@
+subsystem	registered_name	registered_and_hostname	test	perc	label
+FENIX	fx-gpu	fx-gpu(fx-gpu)	load_avg_1min	0.00201923076923077	disp: 103.79 _used: 0.2%
+FENIX	fx-hd	fx-hd(fx-hd)	load_avg_1min	6.57894736842105e-05	disp: 151.99 _used: 0.0%
+FENIX	fx-ld1	fx-ld1(fx-ld1)	load_avg_1min	0.000357142857142857	disp: 111.96 _used: 0.0%
+FENIX	fx-ld2	fx-ld2(fx-ld2)	load_avg_1min	0.00223214285714286	disp: 111.75 _used: 0.2%
+FENIX	fx-lg	fx-lg(fx-lg)	load_avg_1min	0.00138888888888889	disp: 71.9 _used: 0.1%
+FENIX	fx-st	fx-st(storage)	load_avg_1min	0.101041666666667	disp: 43.15 _used: 10.1%
+OLD_CLUSTER	central	central(central)	load_avg_1min	0.005625	disp: 47.73 _used: 0.6%
+OLD_CLUSTER	corellia	corellia(corellia)	load_avg_1min	0.00238636363636364	disp: 87.79 _used: 0.2%
+OLD_CLUSTER	drona	drona(drona)	load_avg_1min	0.00166666666666667	disp: 23.96 _used: 0.2%
+OLD_CLUSTER	indra	indra(indra)	load_avg_1min	0.00291666666666667	disp: 23.93 _used: 0.3%
+OLD_CLUSTER	notron	notron(notron)	load_avg_1min	0.0078125	disp: 31.75 _used: 0.8%
+PEGASO	pg-gpu	pg-gpu(pg-gpu)	load_avg_1min	9.61538461538462e-05	disp: 103.99 _used: 0.0%
+PEGASO	pg-hd	pg-hd(pg-hd)	load_avg_1min	0	disp: 152 _used: 0.0%
+PEGASO	pg-ld1	pg-ld1(pg-ld1)	load_avg_1min	0.00232142857142857	disp: 111.74 _used: 0.2%
+PEGASO	pg-ld2	pg-ld2(pg-ld2)	load_avg_1min	0	disp: 112 _used: 0.0%
+PEGASO	pg-lg	pg-lg(pg-lg)	load_avg_1min	0	disp: 72 _used: 0.0%
+PEGASO	pg-storage-ha1	pg-storage-ha1(pg-storage-ha1)	load_avg_1min	0.006875	disp: 79.45 _used: 0.7%
+PEGASO	pg-storage-ha2	pg-storage-ha2(pg-storage-ha2)	load_avg_1min	0.00175	disp: 79.86 _used: 0.2%
+FENIX	fx-gpu	fx-gpu(fx-gpu)	load_mem	0.02109375	disp: 125.3 G _used: 2.1%
+FENIX	fx-hd	fx-hd(fx-hd)	load_mem	0.0044	disp: 995.6 G _used: 0.4%
+FENIX	fx-ld1	fx-ld1(fx-ld1)	load_mem	0.0033	disp: 996.7 G _used: 0.3%
+FENIX	fx-ld2	fx-ld2(fx-ld2)	load_mem	0.0032	disp: 996.8 G _used: 0.3%
+FENIX	fx-lg	fx-lg(fx-lg)	load_mem	0.02109375	disp: 125.3 G _used: 2.1%
+FENIX	fx-st	fx-st(storage)	load_mem	0.00972762645914397	disp: 254.5 G _used: 1.0%
+OLD_CLUSTER	central	central(central)	load_mem	0.00660194174757282	disp: 511.6 G _used: 0.7%
+OLD_CLUSTER	corellia	corellia(corellia)	load_mem	0.12	disp: 968 G _used: 12.0%
+OLD_CLUSTER	drona	drona(drona)	load_mem	0.10625	disp: 28.6 G _used: 10.6%
+OLD_CLUSTER	indra	indra(indra)	load_mem	0.0182222222222222	disp: 220.9 G _used: 1.8%
+OLD_CLUSTER	notron	notron(notron)	load_mem	0.00451977401129944	disp: 352.4 G _used: 0.5%
+PEGASO	pg-gpu	pg-gpu(pg-gpu)	load_mem	0.025	disp: 124.8 G _used: 2.5%
+PEGASO	pg-hd	pg-hd(pg-hd)	load_mem	0.0036	disp: 996.4 G _used: 0.4%
+PEGASO	pg-ld1	pg-ld1(pg-ld1)	load_mem	0.0031	disp: 996.9 G _used: 0.3%
+PEGASO	pg-ld2	pg-ld2(pg-ld2)	load_mem	0.0032	disp: 996.8 G _used: 0.3%
+PEGASO	pg-lg	pg-lg(pg-lg)	load_mem	0.0140625	disp: 126.2 G _used: 1.4%
+PEGASO	pg-storage-ha1	pg-storage-ha1(pg-storage-ha1)	load_mem	0.0252427184466019	disp: 502 G _used: 2.5%
+PEGASO	pg-storage-ha2	pg-storage-ha2(pg-storage-ha2)	load_mem	0.0213592233009709	disp: 504 G _used: 2.1%
+FENIX	fx-gpu	fx-gpu(fx-gpu)	load_rootdisk	0.195979899497487	disp: 160 G _used: 19.6%
+FENIX	fx-hd	fx-hd(fx-hd)	load_rootdisk	0.237373737373737	disp: 151 G _used: 23.7%
+FENIX	fx-ld1	fx-ld1(fx-ld1)	load_rootdisk	0.242424242424242	disp: 150 G _used: 24.2%
+FENIX	fx-ld2	fx-ld2(fx-ld2)	load_rootdisk	0.232323232323232	disp: 152 G _used: 23.2%
+FENIX	fx-lg	fx-lg(fx-lg)	load_rootdisk	0.251256281407035	disp: 149 G _used: 25.1%
+FENIX	fx-st	fx-st(storage)	load_rootdisk	0.0414746543778802	disp: 416 G _used: 4.1%
+OLD_CLUSTER	central	central(central)	load_rootdisk	0.0359712230215827	disp: 402 G _used: 3.6%
+OLD_CLUSTER	corellia	corellia(corellia)	load_rootdisk	0.472477064220183	disp: 230 G _used: 47.2%
+OLD_CLUSTER	drona	drona(drona)	load_rootdisk	0.0967741935483871	disp: 392 G _used: 9.7%
+OLD_CLUSTER	indra	indra(indra)	load_rootdisk	0.0122605363984674	disp: 1289 G _used: 1.2%
+OLD_CLUSTER	notron	notron(notron)	load_rootdisk	0.00862068965517241	disp: 1725 G _used: 0.9%
+PEGASO	pg-gpu	pg-gpu(pg-gpu)	load_rootdisk	0.0377358490566038	disp: 357 G _used: 3.8%
+PEGASO	pg-hd	pg-hd(pg-hd)	load_rootdisk	0.0378378378378378	disp: 356 G _used: 3.8%
+PEGASO	pg-ld1	pg-ld1(pg-ld1)	load_rootdisk	0.0378378378378378	disp: 356 G _used: 3.8%
+PEGASO	pg-ld2	pg-ld2(pg-ld2)	load_rootdisk	0.0378378378378378	disp: 356 G _used: 3.8%
+PEGASO	pg-lg	pg-lg(pg-lg)	load_rootdisk	0.0378378378378378	disp: 356 G _used: 3.8%
+PEGASO	pg-storage-ha1	pg-storage-ha1(pg-storage-ha1)	load_rootdisk	0.0389221556886228	disp: 321 G _used: 3.9%
+PEGASO	pg-storage-ha2	pg-storage-ha2(pg-storage-ha2)	load_rootdisk	0.0389221556886228	disp: 321 G _used: 3.9%
+FENIX	fx-gpu	fx-gpu(fx-gpu)	maxtemp_C	0.42	42.0 °C
+FENIX	fx-hd	fx-hd(fx-hd)	maxtemp_C	0.38	38.0 °C
+FENIX	fx-ld1	fx-ld1(fx-ld1)	maxtemp_C	0.34	34.0 °C
+FENIX	fx-ld2	fx-ld2(fx-ld2)	maxtemp_C	0.3	30.0 °C
+FENIX	fx-lg	fx-lg(fx-lg)	maxtemp_C	0.7	70.0 °C
+FENIX	fx-st	fx-st(storage)	maxtemp_C	0.44	44.0 °C
+OLD_CLUSTER	corellia	corellia(corellia)	maxtemp_C	0.44	44.0 °C
