@@ -1,8 +1,0 @@
-# subsytem registered_hostname ip port user
-OLD_CLUSTER corellia cluster.inmegen.gob.mx 5263 itadmin
-FENIX fx-lg fenix.inmegen.gob.mx 7678 itadmin
-FENIX fx-gpu fenix.inmegen.gob.mx 7679 itadmin
-FENIX fx-ld1 fenix.inmegen.gob.mx 5265 itadmin
-FENIX fx-ld2 fenix.inmegen.gob.mx 5258 itadmin
-FENIX fx-hd fenix.inmegen.gob.mx 7680 itadmin
-FENIX fx-st fenix.inmegen.gob.mx 22 itadmin

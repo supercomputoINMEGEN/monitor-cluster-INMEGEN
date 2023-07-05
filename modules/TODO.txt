@@ -1,9 +1,0 @@
-# MODS
-OK 10 - get usernames and UID
-OK 11 - get groupnames and GID
-12 - get home usage...? (weekly... on saturday...)  || how to speed this...? (maybe only if storage is over X%... )
-13 - get /labs/* | /DATA/storage/* usage (weekly... on saturday) (launch only on storageboxes...) || how to speed this...? (maybe only if storage is over X%... )
-
-14 - Mount R analyzer to generate plots and R objects
-
-15 - Create the reports for each semester
