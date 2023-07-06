@@ -312,14 +312,9 @@ allusers <- the_data %>%
   filter( test == "users" ) %>% 
   select( value, subsystem, registered_and_hostname, date, time ) %>% 
   separate( col = value,
-            into = c("us", "x", "UID"),
+            into = c("user", "x", "UID"),
             sep = ":" ) %>% 
-  mutate( us = paste( us, UID, sep = ";" ) ) %>% 
-  select( -x, -UID ) %>% 
-  dplyr::group_by( subsystem, registered_and_hostname, date, time  ) %>%             # maybe could be speed up if we take uniq values of date and time and paste them, instead of grouping by
-  arrange( us ) %>% 
-  summarise( allusers = paste( us, collapse = ":" ) ) %>% 
-  ungroup( )
+  select( -x )
 
 # save allusers
 write.table( x = allusers,
@@ -336,13 +331,8 @@ allgroups <- the_data %>%
   select( value, subsystem, registered_and_hostname, date, time ) %>% 
   separate( col = value,
             into = c("gp", "x", "GID"),
-            sep = ":" ) %>% 
-  mutate( gp = paste( gp, GID, sep = ";" ) ) %>% 
-  select( -x, -GID ) %>% 
-  dplyr::group_by( subsystem, registered_and_hostname, date, time  ) %>%             # maybe could be speed up if we take uniq values of date and time and paste them, instead of grouping by
-  arrange( gp ) %>% 
-  summarise( allgroups = paste( gp, collapse = ":" ) ) %>% 
-  ungroup( )
+            sep = ":" ) %>%
+  select( -x )
 
 # save allusers
 write.table( x = allgroups,
