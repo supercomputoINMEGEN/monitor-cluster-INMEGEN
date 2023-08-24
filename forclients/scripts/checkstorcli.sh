@@ -8,25 +8,32 @@ then
 fi
 
 # get the state of the controller
-STATUS=$(storcli64 /c0 show all | grep "Status")
+STATUS=$(storcli64 show all | grep "Status")
 
 if [ "$STATUS" = "Status = Failure" ]
 then
-    echo "sotrcli64_CONTROLLER_NOT_FOUND________"
+    echo "sotrcli64_CONTROLLER_FAILURE_________"
     exit
 fi
 
-# find lines for info
-line_for_VD=$( storcli64 /c0 show all | grep "VD LIST" -n | cut -d":" -f1 )
-line_for_PD=$( storcli64 /c0 show all | grep "PD LIST" -n | cut -d":" -f1 )
+# Find lines for the segment of interest in the log
+startline_for_System_Overview=$( storcli64 show all | grep "System Overview" -n | cut -d":" -f1 )
+endline_for_System_Overview=$( storcli64 show all | grep -w "ASO" -n | cut -d":" -f1 )
 
-# echo "[DEBUG] VD line found at $line_for_VD"
-# echo "[DEBUG] PD line found at $line_for_PD"
+# echo "$startline_for_System_Overview"
+# echo "$endline_for_System_Overview"
 
-storcli64 /c0 show all \
-| sed -n "$line_for_VD,$line_for_PD p" \
+valid_controllers=$( storcli64 show all \
+| sed -n "$startline_for_System_Overview,$endline_for_System_Overview p" \
 | grep -v "=" \
 | grep -v "^$" \
-| grep "^[0-9]" \
 | tr -s " " \
-| tr " " "_"
+| grep "^ " \
+| cut -d" " -f2 )
+
+# loop through controllers
+for controller in $valid_controllers
+do
+	# echo "[DEBUG] analyzing controller: $controller"
+	$(dirname "$0")/askcontroller.sh $controller
+done
