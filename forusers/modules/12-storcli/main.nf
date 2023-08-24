@@ -2,21 +2,21 @@
 nextflow.enable.dsl=2
 
 /* Define the main processes */
-process getgroups {
+process storcli {
 
-    publishDir "${params.results_dir}/11-getgroups/", mode:"copyNoFollow"
+    publishDir "${params.results_dir}/12-storcli/", mode:"copyNoFollow"
 
     input:
-        path USERS
+        path GROUPS
         path SCRIPT
 
     output:
-        path "allgroups.tmp", emit: getgroups_results
+        path "allgroups.tmp", emit: storcli_results
 
     script:
     """
     # remove previous test results
-    grep " ONLINE " $USERS | cut -d" " -f1-5 | sort | uniq > valids.tmp
+    grep " ONLINE " $GROUPS | cut -d" " -f1-5 | sort | uniq > valids.tmp
 
     # loop trough every uniq connection to get all groups
     while read conn
@@ -35,22 +35,22 @@ process getgroups {
         || echo "NA NA") \
         | awk -v info="\$conn \$test_name root" ' BEGIN{ FS=OFS=" "} {print info, \$0}' 
     done < valids.tmp \
-    | cat $USERS - > allgroups.tmp # concat previous test log with this test
+    | cat $GROUPS - > allgroups.tmp # concat previous test log with this test
    
     """
 
 }
 
 /* name a flow for easy import */
-workflow GETGROUPS {
+workflow STORCLI {
 
     take:
-        all_users
-        scripts_getgroups
+        all_groups
+        scripts_storcli
 
     main:        
-        getgroups( all_users, scripts_getgroups )
+        storcli( all_groups, scripts_storcli )
     
     emit:
-        getgroups.out[0]
+        storcli.out[0]
 }
