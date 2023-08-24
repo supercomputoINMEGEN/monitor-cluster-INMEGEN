@@ -15,7 +15,7 @@ logs/*
 work*
 
 # Ignore test subdirectories from nfmodules
-modules/*/test/results/*
+forusers/modules/*/test/results/*
 
 # Ignore results from main test
 test/results/
