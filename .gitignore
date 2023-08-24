@@ -16,6 +16,7 @@ work*
 
 # Ignore test subdirectories from nfmodules
 forusers/modules/*/test/results/*
+forusers/modules/A-analyzeR/test/results/A-analyzeR/all_resources.tsv
 
 # Ignore results from main test
 test/results/
@@ -27,3 +28,4 @@ test/results/
 # ignore monitor results
 monitor-results/
 NFrun.log
+
