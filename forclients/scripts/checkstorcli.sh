@@ -3,7 +3,16 @@
 # validate if this is a storcli system
 if ! command -v storcli64 &> /dev/null
 then
-    echo "NOT_A_storcli64_SYSTEM"
+    echo "NOT_A_storcli64_SYSTEM________"
+    exit
+fi
+
+# get the state of the controller
+STATUS=$(storcli64 /c0 show all | grep "Status")
+
+if [ "$STATUS" = "Status = Failure" ]
+then
+    echo "sotrcli64_CONTROLLER_NOT_FOUND________"
     exit
 fi
 
