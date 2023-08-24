@@ -1,0 +1,3 @@
+#
+1. Make that RMD reports are only generated once daily, not in every cronjob exec (i.e. every 20 min).
+   This will reduce runtime, due to many datapoints being analized every 30 mins (or every tick of the cronjob)
