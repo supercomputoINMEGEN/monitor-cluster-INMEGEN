@@ -2,41 +2,69 @@
 nextflow.enable.dsl=2
 
 /* Define the main processes */
-process storcli {
 
-    publishDir "${params.results_dir}/12-storcli/", mode:"copyNoFollow"
+process splitvalids {
 
     input:
         path GROUPS
-        path SCRIPT
-
+    
     output:
-        path "allgroups.tmp", emit: storcli_results
+        path "chunk_*.tmp"
 
     script:
     """
-    # remove previous test results
-    grep " ONLINE " $GROUPS | cut -d" " -f1-5 | sort | uniq > valids.tmp
+    # find ONLINE nodes
+    grep " ONLINE " $GROUPS | cut -d" " -f1-5 | sort | uniq \
+    | split -l 1 -d - --additional-suffix=".tmp" "chunk_"
+    """
+}
 
-    # loop trough every uniq connection to get all groups
-    while read conn
-    do
-        ## set routes
-        ip="\$(echo \$conn | cut -d' ' -f3)"
-        port="\$(echo \$conn | cut -d' ' -f4)"
-        user="\$(echo \$conn | cut -d' ' -f5)"
-        test_name="groups"
-        # Usaremos ConnectTimeout 10 para darle 10 segundos al comando para establecer conexion
-        (ssh \
+process storcli {
+
+     input:
+         path CHUNK
+
+     output:
+         path "*.storcli*"
+
+    script:
+    """
+    conn=\$(cat $CHUNK)
+    
+    ## set routes
+    ip="\$(echo \$conn | cut -d' ' -f3)"
+    port="\$(echo \$conn | cut -d' ' -f4)"
+    user="\$(echo \$conn | cut -d' ' -f5)"
+    test_name="storcli"
+
+    # Usaremos ConnectTimeout 10 para darle 10 segundos al comando para establecer conexion
+    testresult=\$( ssh \
         -i ${params.sshkey} \
         -o ConnectTimeout=10 \
         -p \$port \$user@\$ip \
-        'bash -s' < $SCRIPT \
-        || echo "NA NA") \
-        | awk -v info="\$conn \$test_name root" ' BEGIN{ FS=OFS=" "} {print info, \$0}' 
-    done < valids.tmp \
-    | cat $GROUPS - > allgroups.tmp # concat previous test log with this test
-   
+        'sudo ~/monitor-cluster-INMEGEN/forclients/scripts/checkstorcli.sh' \
+    || echo "NA" )
+
+    # le damos formato a la respuesta final
+    # le voy a agregar un NA al final para que no se descuadre con el numero de columnas de resultados de modulos anteriores
+    echo "\$conn \$test_name root \$testresult NA" > $CHUNK".storcli.tmp"
+    """
+}
+
+process gather_storcli {
+
+     publishDir "${params.results_dir}/12-storcli/", mode:"copyNoFollow"
+
+     input:
+         path ALLCHUNKS
+
+     output:
+         path "allstorcli.tmp", emit: storcli_results 
+
+    script:
+    
+    """
+    cat chunk_*storcli.tmp > allstorcli.tmp
     """
 
 }
@@ -46,11 +74,14 @@ workflow STORCLI {
 
     take:
         all_groups
-        scripts_storcli
 
     main:        
-        storcli( all_groups, scripts_storcli )
+        split_res = splitvalids( all_groups ) | flatten | storcli
+        split_res
+        .toList()
+        | gather_storcli
     
     emit:
-        storcli.out[0]
+        gather_storcli.out[0]
+
 }
