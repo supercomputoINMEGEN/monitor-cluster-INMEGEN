@@ -125,6 +125,8 @@ include { TOPDISK }           from  './modules/08-top3disks'
 include { MAXTEMP }           from  './modules/09-maxtemp'
 include { GETUSERS }          from  './modules/10-getusers'
 include { GETGROUPS }         from  './modules/11-getgroups'
+include { STORCLI }           from  './modules/12-storcli'
+
 include { ANALYZER }          from  './modules/A-analyzeR'
 include { RMD_REPORT }        from  './modules/B-rmdreports'
 include { RECORDCONFIG }      from  './modules/Z-recordconfigs'
@@ -169,7 +171,8 @@ workflow {
   all_temp = MAXTEMP ( all_topdisk, scripts_maxtemp )
   all_users = GETUSERS ( all_temp, scripts_getusers )
   all_groups = GETGROUPS ( all_users, scripts_getgroups )
-  ANALYZER ( all_groups, scripts_analyzer )
+  all_data = STORCLI( all_groups )
+  ANALYZER ( all_data, scripts_analyzer )
 
   /* read past logs; note: what happens if this is the first time it runs and there is no logs...? */
   all_logsgz = Channel.fromPath( "logs/*.gz" ).toList()

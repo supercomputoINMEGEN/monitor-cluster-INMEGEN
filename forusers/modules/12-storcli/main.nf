@@ -80,7 +80,7 @@ workflow STORCLI {
         all_res = split_res.toList()
         gather_storcli( all_res, all_groups )
     
-//    emit:
-  //      gather_storcli.out[0]
+   emit:
+       gather_storcli.out[0]
 
 }

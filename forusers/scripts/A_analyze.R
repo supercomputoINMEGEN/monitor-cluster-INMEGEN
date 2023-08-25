@@ -19,7 +19,7 @@ source( file = "shiny-scripts.R" )
 args <- commandArgs( trailingOnly = TRUE )
 
 # pass args to objects
-ifile <- args[1]     # <- "test/data/allgroups.tmp" 
+ifile <- args[1]     # <- "test/data/allstorcli.tmp" 
 timest <- args[2]    # <- "2023-04-15_18:54" 
 
 # split the timestamp
@@ -343,5 +343,22 @@ write.table( x = allgroups,
              row.names = FALSE,
              col.names = TRUE )
 
-### zpool_list;NAME_SIZE_ALLOC_FREE_EXPANDSZ_FRAG_CAP_DEDUP_HEALTH_ALTROOT ====
+# extract useful storcli information
+allstorcli <- the_data %>% 
+  filter( test == "storcli" ) %>% 
+  select( value, subsystem, registered_and_hostname, date, time ) %>% 
+  separate( col = value,
+            into = c( "DG_VD", "TYPE", "State", "Acess", "Consist", "Cache", "Cac", "sCC", "Size_num", "Size_mag", "Name" ),
+            sep = "_" ) %>%
+  filter( DG_VD != "NOT" )
 
+# save allusers
+write.table( x = allstorcli,
+             file = "allstorcli.tsv",
+             append = FALSE,
+             quote = FALSE,
+             sep = "\t",
+             row.names = FALSE,
+             col.names = TRUE )
+
+### zpool_list;NAME_SIZE_ALLOC_FREE_EXPANDSZ_FRAG_CAP_DEDUP_HEALTH_ALTROOT ====
