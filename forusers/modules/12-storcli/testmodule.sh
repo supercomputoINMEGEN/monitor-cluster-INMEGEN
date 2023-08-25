@@ -1,4 +1,4 @@
-s#!/usr/bin/env bash
+#!/usr/bin/env bash
 ## This small script runs a module test with the sample data
 
 # remove previous tests

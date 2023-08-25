@@ -38,16 +38,15 @@ process storcli {
     test_name="storcli"
 
     # Usaremos ConnectTimeout 10 para darle 10 segundos al comando para establecer conexion
-    testresult=\$( ssh \
+    # y le damos formato a la respuesta final
+    # le voy a agregar un NA al final para que no se descuadre con el numero de columnas de resultados de modulos anteriores
+    ( ssh \
         -i ${params.sshkey} \
         -o ConnectTimeout=10 \
         -p \$port \$user@\$ip \
         'sudo ~/monitor-cluster-INMEGEN/forclients/scripts/checkstorcli.sh' \
-    || echo "NA" )
-
-    # le damos formato a la respuesta final
-    # le voy a agregar un NA al final para que no se descuadre con el numero de columnas de resultados de modulos anteriores
-    echo "\$conn \$test_name root \$testresult NA" > $CHUNK".storcli.tmp"
+    || echo "NA" ) \
+    | awk -v info="\$conn \$test_name root" ' BEGIN{ FS=OFS=" "} {print info, \$0, "NA"}' > $CHUNK".storcli.tmp"
     """
 }
 

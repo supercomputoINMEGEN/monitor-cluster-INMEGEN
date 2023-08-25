@@ -14,8 +14,8 @@ include { STORCLI }    from './main.nf'
 all_groups = Channel.fromPath( "test/data/allgroups.tmp" )
 
 /* declare scripts channel for testing */
-scripts_storcli = Channel.fromPath( "scripts/12_checkstorcli.sh" )
+// NONE
 
 workflow {
-  STORCLI ( all_groups, scripts_storcli )
+  STORCLI ( all_groups )
 }
