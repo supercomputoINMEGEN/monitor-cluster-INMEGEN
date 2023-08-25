@@ -11,11 +11,11 @@ params.intermediates_dir = params.results_dir = "test/results"
 include { ANALYZER }    from './main.nf'
 
 /* declare input channel for testing */
-all_groups= Channel.fromPath( "test/data/allgroups.tmp" )
+all_data= Channel.fromPath( "test/data/allstorcli.tmp" )
 
 /* declare scripts channel for testing */
 scripts_analyzer = Channel.fromPath( "scripts/*.R" ).toList( )
 
 workflow {
-  ANALYZER ( all_groups, scripts_analyzer )
+  ANALYZER ( all_data, scripts_analyzer )
 }

@@ -26,11 +26,11 @@ process analyzer {
 workflow ANALYZER {
 
     take:
-        all_groups
+        all_data
         scripts_analyzer
 
     main:        
-        analyzer( all_groups, scripts_analyzer )
+        analyzer( all_data, scripts_analyzer )
     
     emit:
         analyzer.out[0]
