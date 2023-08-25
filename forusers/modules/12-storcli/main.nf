@@ -56,6 +56,7 @@ process gather_storcli {
 
      input:
          path ALLCHUNKS
+         path GROUPS
 
      output:
          path "allstorcli.tmp", emit: storcli_results 
@@ -63,7 +64,7 @@ process gather_storcli {
     script:
     
     """
-    cat chunk_*storcli.tmp > allstorcli.tmp
+    cat $GROUPS chunk_*storcli.tmp > allstorcli.tmp
     """
 
 }
@@ -76,11 +77,10 @@ workflow STORCLI {
 
     main:        
         split_res = splitvalids( all_groups ) | flatten | storcli
-        split_res
-        .toList()
-        | gather_storcli
+        all_res = split_res.toList()
+        gather_storcli( all_res, all_groups )
     
-    emit:
-        gather_storcli.out[0]
+//    emit:
+  //      gather_storcli.out[0]
 
 }
