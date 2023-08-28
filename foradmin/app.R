@@ -8,6 +8,9 @@ library("tidyr")
 library("dplyr")
 library("shinyjs")
 
+# source all the functions
+source( file = "admin_scripts.R" )
+
 ui <- dashboardPage(
   dashboardHeader(title = "Cluster Inmegen - Administracion"),  
   
@@ -17,7 +20,7 @@ ui <- dashboardPage(
       menuItem(text = "Usuarios",
                tabName = "users",
                icon = icon("user", lib = "glyphicon"))
-      ) # Fin del sidebarMenu  
+    ) # Fin del sidebarMenu  
   ), # Fin y coma del dashboardSidebar
   
   # The Body to show en la pagina
@@ -26,54 +29,55 @@ ui <- dashboardPage(
     
     # Página de inicio de sesión    
     tags$div(
-    id = "login_div",
-    style = "margin-top: 50px;",      
-    wellPanel(
-      textInput("username", "Nombre de usuario"),        
-      passwordInput("password", "Contraseña"),
-      br(),        
-      actionButton("login_btn", "Iniciar sesión")
+      id = "login_div",
+      style = "margin-top: 50px;",      
+      wellPanel(
+        textInput("username", "Nombre de usuario"),        
+        passwordInput("password", "Contraseña"),
+        br(),        
+        actionButton("login_btn", "Iniciar sesión")
       )    
     ),
     
-  # Contenido del dashboard (oculto inicialmente)
-  tags$div(      
-    id = "dashboard_content",
-    style = "display: none;",      
-    
-    # Dividido por categoria del sidebar menu
-    tabItems(        
+    # Contenido del dashboard (oculto inicialmente)
+    tags$div(      
+      id = "dashboard_content",
+      style = "display: none;",      
       
-      # Primer tab conten; Usuarios
-      tabItem(          
-        tabName = "users",
-        fluidRow(            
-          box(title = "Buscar user",              
-              selectInput(inputId = "user_select",
-                          label = "Seleccionar",                          
-                          choices = NULL), 
-              width = 3),            
-          box(
-            title = "Propagacion del Usuario",              
-            plotOutput("heatmap"),
-            width = 10)
+      # Dividido por categoria del sidebar menu
+      tabItems(        
+        
+        # Primer tab conten; Usuarios
+        tabItem(          
+          tabName = "users",
+          fluidRow(            
+            box(title = "Buscar user",              
+                selectInput(inputId = "user_select",
+                            label = "Seleccionar",                          
+                            choices = NULL), 
+                width = 3),            
+            box(
+              title = "Propagacion del Usuario",              
+              plotOutput("heatmap"),
+              width = 10)
           ) # end fluidrow        
         )
       )
     )
   )
 )
+
 # Define server logic
 server <- function(input, output, session) {
-
-# Variables de usuario y contraseña unicos  
+  
+  # Variables de usuario y contraseña unicos  
   valid_username <- "sbiadmin"
   valid_password <- "inmegen 2023"  
   
-# Variable para controlar si el usuario ha iniciado sesión  
+  # Variable para controlar si el usuario ha iniciado sesión  
   loggedin <- reactiveVal(FALSE)
   
-# Función para mostrar el contenido del dashboard cuando el usuario ha iniciado sesión
+  # Función para mostrar el contenido del dashboard cuando el usuario ha iniciado sesión
   showDashboardContent <- function() { 
     if (loggedin()) { 
       shinyjs::show("dashboard_content")  # Mostramos el contenido 
@@ -83,73 +87,55 @@ server <- function(input, output, session) {
       shinyjs::show("login_div")  # Mostramos la página de inicio de sesión 
     } 
   } 
-
-# Verificación de inicio de sesión  
-  observeEvent(input$login_btn, {
-    if (input$username == valid_username && input$password == valid_password) {      
-      loggedin(TRUE)
-  showDashboardContent()
-  } else {      
-    
-  # Mostrar mensaje de error de inicio de sesión
-  showModal(        
-    modalDialog(
-    title = "Error de inicio de sesión","Nombre de usuario o contraseña incorrectos.",easyClose = TRUE)
-    )    }
-  }
-)  
   
-# Read the data  
- all_usuarios <- vroom(file = "logs/allusers.tsv")
- 
-# get all the possible hostnames
- allhostnames <- all_usuarios %>%     
-  select(registered_and_hostname) %>% 
-  unique() %>%     
-  mutate(default = "missing") %>% 
-  arrange(registered_and_hostname)  
- 
-# Update user selection choices  
+  # Verificación de inicio de sesión  
+  observeEvent(
+    input$login_btn,
+    {
+      if (input$username == valid_username && input$password == valid_password) {      
+        loggedin(TRUE)
+        showDashboardContent()
+      } else {      
+        
+        # Mostrar mensaje de error de inicio de sesión
+        showModal(        
+          modalDialog(
+            title = "Error de inicio de sesión","Nombre de usuario o contraseña incorrectos.",easyClose = TRUE)
+        )    }
+    }
+  )  
+  
+  # Read the data  
+  all_usuarios <- vroom(file = "logs/allusers.tsv")
+  
+  # get all the possible hostnames
+  allhostnames <- all_usuarios %>%     
+    select(registered_and_hostname) %>% 
+    unique() %>%     
+    mutate(default = "missing") %>% 
+    arrange( registered_and_hostname )
+  
+  # Update user selection choices  
   users <- unique(all_usuarios$user) %>% sort()
+  
   updateSelectInput(session, "user_select", choices = users)  
   
-# Render the heatmap  
+  # Render the heatmap  
   output$heatmap <- renderPlot({
     
-# Filter data based on user selection    
-    filtered_data <- subset(x = all_usuarios, user == input$user_select) %>%
-      mutate(col_tag = ifelse(test = length(unique(pull(., UID))) == 1,no = "fail", yes = "ok"))
+    user_propagation.f( the_data = all_usuarios,
+                        the_user = input$user_select,
+                        the_hostnames = allhostnames )
     
-# mix filtered and defaults    
-    mixed_data <- left_join(x = allhostnames,
-                            y = filtered_data,
-                            by = "registered_and_hostname") %>%       
-      mutate(user = unique(na.omit(pull(., user))),
-      col_tag = ifelse(test = is.na(col_tag), yes = "missing", no = col_tag))
-    
-# Create the heatmap plot    
-    ggplot(data = mixed_data, aes(x = registered_and_hostname, y = user, label = UID, fill = col_tag)) +
-      geom_tile(color = "black") +      
-      geom_text() +
-      scale_x_discrete(limits = allhostnames$registered_and_hostname) +      
-      scale_fill_manual(values = c("fail" = "tomato", "ok" = "skyblue", "missing" = "white")) +
-      labs(title = "Propagacion de usuarios",           
-           x = "Registered and Hostname",
-           y = "User",           
-           fill = "UID test") +
-      theme_minimal(base_size = 15) +      
-      theme(axis.text.x = element_text(angle = 90, hjust = 0.5))
-})  
+  })  
   
-# Render the filtered_data table  
-  output$filtered_data_table <- renderDataTable({
-  filtered_data <- subset(x = all_usuarios, user == input$user_select)    
-  datatable(filtered_data)
-})
-  
-# Mostrar el contenido del dashboard cuando el usuario ha iniciado sesión  
+  # Mostrar el contenido del dashboard cuando el usuario ha iniciado sesión  
   observe({
-    showDashboardContent()  })
+    
+    showDashboardContent( )
+    
+  })
+  
 }
 
 shinyApp(ui, server)

@@ -33,6 +33,7 @@ _008_top3disks
 _009_maxtemp
 _010_getusers
 _011_getgroups
+_012_storcli
 
 Pos-processing
 A_analyzeR
