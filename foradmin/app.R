@@ -56,7 +56,10 @@ ui <- dashboardPage(
         tabItem(
           tabName = "raids",
           fluidRow(
-            box( title = "Estados de los RAIDs por Storcli",              
+            box( title = "BAD Storcli RAIDs",              
+                 dataTableOutput( outputId = "table_storcli_BAD" ),
+                 width = 10 ),
+            box( title = "Storcli RAIDs OK",              
                  dataTableOutput( outputId = "table_storcli_OK" ),
                  width = 10 )
           ) # end fluidrow        
@@ -138,7 +141,7 @@ server <- function(input, output, session) {
     rename( Size = Size_num,
             Unit = Size_mag,
             hostname = registered_and_hostname ) %>% 
-    relocate( hostname, Name, Size, Unit, .before = 1 )
+    relocate( State, hostname, Name, Size, Unit, .before = 1 )
   
   storcli_OK <- all_storcli %>% 
     filter( State == "Optl" )
@@ -148,11 +151,19 @@ server <- function(input, output, session) {
   
   # Render the tables
   output$table_storcli_OK <- renderDataTable({
-    datatable( storcli_OK )
+    datatable( storcli_OK,
+               options = list(
+                 paging = TRUE,
+                 pageLength =  20
+               ) )
   })
   
   output$table_storcli_BAD <- renderDataTable({
-    datatable( storcli_BAD )
+    datatable( storcli_BAD,
+               options = list(
+                 paging = TRUE,
+                 pageLength =  20
+               ) )
   })
   
   # Read the data  
