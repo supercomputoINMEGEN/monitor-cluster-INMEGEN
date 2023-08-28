@@ -56,10 +56,10 @@ ui <- dashboardPage(
         tabItem(
           tabName = "raids",
           fluidRow(
-            box( title = "BAD Storcli RAIDs",              
+            box( title = h3( "BAD Storcli RAIDs", style = 'font-size:42px;color:red;' ),               
                  dataTableOutput( outputId = "table_storcli_BAD" ),
                  width = 10 ),
-            box( title = "Storcli RAIDs OK",              
+            box( title = h3(  "Storcli RAIDs OK", style = 'font-size:42px;color:blue;'),
                  dataTableOutput( outputId = "table_storcli_OK" ),
                  width = 10 )
           ) # end fluidrow        
@@ -162,7 +162,8 @@ server <- function(input, output, session) {
     datatable( storcli_BAD,
                options = list(
                  paging = TRUE,
-                 pageLength =  20
+                 pageLength =  20,
+                 backgroundColor = "tomato"
                ) )
   })
   
