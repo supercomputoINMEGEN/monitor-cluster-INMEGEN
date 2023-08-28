@@ -17,9 +17,13 @@ ui <- dashboardPage(
   # The sidebar menus  
   dashboardSidebar(
     sidebarMenu(      
-      menuItem(text = "Usuarios",
-               tabName = "users",
-               icon = icon("user", lib = "glyphicon"))
+      menuItem( text = "Usuarios",
+                tabName = "users",
+                icon = icon( "user", lib = "glyphicon" ) ),
+      menuItem( text = "Grupos",
+                tabName = "groups",
+                icon = icon( "menu-right", lib = "glyphicon" ) )
+      
     ) # Fin del sidebarMenu  
   ), # Fin y coma del dashboardSidebar
   
