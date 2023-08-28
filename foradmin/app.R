@@ -16,7 +16,10 @@ ui <- dashboardPage(
   
   # The sidebar menus  
   dashboardSidebar(
-    sidebarMenu(      
+    sidebarMenu(
+      menuItem( text = "RAIDs",
+                tabName = "raids",
+                icon = icon( "hdd", lib = "glyphicon" ) ),
       menuItem( text = "Usuarios",
                 tabName = "users",
                 icon = icon( "user", lib = "glyphicon" ) ),
@@ -50,6 +53,14 @@ ui <- dashboardPage(
       
       # Dividido por categoria del sidebar menu
       tabItems(        
+        tabItem(
+          tabName = "raids",
+          fluidRow(
+            box( title = "Estados de los RAIDs por Storcli",              
+                 dataTableOutput( outputId = "table_storcli_OK" ),
+                 width = 10 )
+          ) # end fluidrow        
+        ),
         
         # Primer tab conten; Usuarios
         tabItem(
@@ -120,6 +131,29 @@ server <- function(input, output, session) {
         )    }
     }
   )  
+  
+  # Read the data for RADIS
+  all_storcli <- vroom(file = "logs/allstorcli.tsv") %>% 
+    arrange( subsystem, Size_num ) %>% 
+    rename( Size = Size_num,
+            Unit = Size_mag,
+            hostname = registered_and_hostname ) %>% 
+    relocate( hostname, Name, Size, Unit, .before = 1 )
+  
+  storcli_OK <- all_storcli %>% 
+    filter( State == "Optl" )
+  
+  storcli_BAD <- all_storcli %>% 
+    filter( State != "Optl" )
+  
+  # Render the tables
+  output$table_storcli_OK <- renderDataTable({
+    datatable( storcli_OK )
+  })
+  
+  output$table_storcli_BAD <- renderDataTable({
+    datatable( storcli_BAD )
+  })
   
   # Read the data  
   all_usuarios <- vroom(file = "logs/allusers.tsv")
